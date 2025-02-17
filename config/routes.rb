@@ -12,4 +12,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   root "top#index"
+
+  get "/timer", to: "timer#index"
+  get "/gamerecord", to: "gamerecord#index"
+  get "/rulegpt", to: "rulegpt#index"
+  get "/setting", to: "setting#index"
 end
