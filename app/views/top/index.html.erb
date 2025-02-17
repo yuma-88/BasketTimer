@@ -1,1 +1,22 @@
-hello world
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TopMenu</title>
+</head>
+<body>
+  <div class="container">
+    <div class="content-box">
+      <%= link_to 'タイマー', timer_path %>
+    </div>
+    <div class="content-box">
+      <%= link_to '試合記録', gamerecord_path %>
+    </div>
+    <div class="content-box">
+      <%= link_to 'ルール確認用GPT', rulegpt_path %>
+    </div>
+    <div class="content-box">
+      <%= link_to '設定', setting_path %>
+    </div>
+  </div>
+</body>
+</html>
