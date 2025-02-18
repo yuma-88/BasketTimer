@@ -13,8 +13,8 @@ Rails.application.routes.draw do
   # root "posts#index"
   root "top#index"
 
-  get "/timer", to: "timer#index"
-  get "/gamerecord", to: "gamerecord#index"
-  get "/rulegpt", to: "rulegpt#index"
-  get "/setting", to: "setting#index"
+  get "/timers", to: "timers#index"
+  get "/gamerecords", to: "gamerecords#index"
+  get "/rulegpts", to: "rulegpts#index"
+  get "/settings", to: "settings#index"
 end
