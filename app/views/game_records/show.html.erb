@@ -1,0 +1,13 @@
+<h1>試合詳細</h1>
+
+<p>
+  <strong>ホームチーム:</strong> <%= @game_record.home_team.name %><br>
+  <strong>アウェイチーム:</strong> <%= @game_record.away_team.name %><br>
+  <strong>試合タイプ:</strong> <%= @game_record.game_type %><br>
+  <strong>ホームチーム得点:</strong> <%= @game_record.score_home_team %><br>
+  <strong>アウェイチーム得点:</strong> <%= @game_record.score_away_team %><br>
+  <strong>日付:</strong> <%= @game_record.date.strftime("%Y-%m-%d %H:%M") %><br>
+  <strong>詳細:</strong> <%= @game_record.description %><br>
+</p>
+
+<%= link_to '戻る', game_records_path %>
