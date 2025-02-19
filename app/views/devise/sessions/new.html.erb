@@ -1,0 +1,44 @@
+<% content_for :title, "ログイン" %>
+<div class="container flex justify-center items-center">
+  <!-- 画像セクション (large screens) -->
+  <div class="images-section pt-3 hidden lg:block"></div>
+
+  <!-- ログインセクション -->
+  <div class="login-section pt-3">
+    <!-- ログインカード -->
+    <div class="card text-center pt-5 w-96">
+      <h1 class="text-2xl font-semibold">ログイン画面</h1>
+      <div class="card-body">
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="mb-4 mt-6">
+            <%= f.email_field :email, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500", placeholder: "ユーザ名, Eメール" %>
+          </div>
+
+          <div class="mb-4">
+            <%= f.password_field :password, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500", placeholder: "パスワード" %>
+          </div>
+
+          <%= f.submit "ログイン", class: "w-full py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400" %>
+        <% end %>
+
+        <!-- Notice or Alert -->
+        <% if notice %>
+          <p class="text-green-500"><%= notice %></p>
+        <% elsif alert %>
+          <p class="text-red-500"><%= alert %></p>
+        <% end %>
+
+        <!-- パスワードリセットリンク -->
+        <a href="#" class="text-blue-500 text-sm hover:underline my-4 block"> パスワードを忘れた？</a>
+      </div>
+    </div>
+
+    <!-- サインアップリンク -->
+    <div class="card text-center py-2 mt-3 w-96">
+      <div class="card-text">
+        アカウントを持っていない？
+        <%= link_to "サインアップ", new_user_registration_path, class: "text-blue-500 text-sm hover:underline" %>
+      </div>
+    </div>
+  </div>
+</div>
