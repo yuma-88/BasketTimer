@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
+  resources :game_records, only: [ :index, :new, :create, :edit, :update, :destroy ]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -15,7 +16,7 @@ Rails.application.routes.draw do
   root "top#index"
 
   get "/timers", to: "timers#index"
-  get "/gamerecords", to: "gamerecords#index"
+  get "/game_records", to: "game_records#index"
   get "/rulegpts", to: "rulegpts#index"
   get "/settings", to: "settings#index"
 end

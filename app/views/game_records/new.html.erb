@@ -1,0 +1,54 @@
+<% content_for :title, "新規作成" %>
+<h1 class="text-2xl font-semibold mb-6">新規作成</h1>
+
+<%= form_with(model: @game_record, local: true) do |form| %>
+  <% if @game_record.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @game_record.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :date, '日付', class: 'block text-sm font-medium text-gray-700' %>
+    <%= form.date_field :date, class: 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :home_team_name, 'ホームチーム', class: 'block text-sm font-medium text-gray-700' %>
+    <%= form.text_field :home_team_name, class: 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :away_team_name, 'アウェイチーム', class: 'block text-sm font-medium text-gray-700' %>
+    <%= form.text_field :away_team_name, class: 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :game_type, '試合タイプ', class: 'block text-sm font-medium text-gray-700' %>
+    <%= form.select :game_type, GameRecord.game_types.keys.map { |w| [w.humanize, w] }, {}, class: 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :score_home_team, 'ホームチーム得点', class: 'block text-sm font-medium text-gray-700' %>
+    <%= form.number_field :score_home_team, class: 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :score_away_team, 'アウェイチーム得点', class: 'block text-sm font-medium text-gray-700' %>
+    <%= form.number_field :score_away_team, class: 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :description, '概要', class: 'block text-sm font-medium text-gray-700' %>
+    <%= form.text_area :description, class: 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500', rows: 3 %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.submit '保存', class: 'px-4 py-2 bg-blue-500 text-white rounded-md' %>
+  </div>
+
+<% end %>

@@ -10,9 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_19_085246) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_19_152809) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "game_records", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "home_team_id"
+    t.bigint "away_team_id"
+    t.string "game_type"
+    t.integer "score_home_team"
+    t.integer "score_away_team"
+    t.datetime "date"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["away_team_id"], name: "index_game_records_on_away_team_id"
+    t.index ["home_team_id"], name: "index_game_records_on_home_team_id"
+    t.index ["user_id"], name: "index_game_records_on_user_id"
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -26,4 +48,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_19_085246) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  add_foreign_key "game_records", "teams", column: "away_team_id"
+  add_foreign_key "game_records", "teams", column: "home_team_id"
+  add_foreign_key "game_records", "users"
 end
