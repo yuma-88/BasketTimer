@@ -18,7 +18,7 @@ class GameRecordsController < ApplicationController
     @game_record.away_team = away_team
 
     if @game_record.save
-      redirect_to game_records_path, notice: '試合記録が作成されました。'
+      redirect_to game_records_path, notice: "試合記録が作成されました。"
     else
       render :new
     end
@@ -27,7 +27,7 @@ class GameRecordsController < ApplicationController
   def show
     @game_record = GameRecord.find(params[:id])
   end
-  
+
   private
 
   def game_record_params

@@ -1,7 +1,7 @@
 class GameRecord < ApplicationRecord
   belongs_to :user
-  belongs_to :home_team, class_name: 'Team', foreign_key: 'home_team_id', optional: true
-  belongs_to :away_team, class_name: 'Team', foreign_key: 'away_team_id', optional: true
+  belongs_to :home_team, class_name: "Team", foreign_key: "home_team_id", optional: true
+  belongs_to :away_team, class_name: "Team", foreign_key: "away_team_id", optional: true
 
   validates :date, presence: true
   validates :home_team_name, presence: true
@@ -11,7 +11,7 @@ class GameRecord < ApplicationRecord
   attr_accessor :home_team_name, :away_team_name
 
   # enumでゲームタイプを定義（日本語）
-  enum game_type: { 練習: '練習', 交流: '交流', 大会: '大会', 公式: '公式' }
+  enum game_type: { 練習: "練習", 交流: "交流", 大会: "大会", 公式: "公式" }
 
   # 保存前にチームを作成
   before_save :create_teams
