@@ -1,13 +1,18 @@
-<h1>試合詳細</h1>
+<% content_for :title, "試合詳細" %>
+<h1 class="text-3xl font-bold mb-6">試合詳細</h1>
 
-<p>
-  <strong>ホームチーム:</strong> <%= @game_record.home_team.name %><br>
-  <strong>アウェイチーム:</strong> <%= @game_record.away_team.name %><br>
-  <strong>試合タイプ:</strong> <%= @game_record.game_type %><br>
-  <strong>ホームチーム得点:</strong> <%= @game_record.score_home_team %><br>
-  <strong>アウェイチーム得点:</strong> <%= @game_record.score_away_team %><br>
-  <strong>日付:</strong> <%= @game_record.date.strftime("%Y-%m-%d %H:%M") %><br>
-  <strong>詳細:</strong> <%= @game_record.description %><br>
-</p>
+<div class="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
+  <p class="mb-4">
+    <strong class="text-lg">ホームチーム:</strong> <%= @game_record.home_team.name %><br>
+    <strong class="text-lg">アウェイチーム:</strong> <%= @game_record.away_team.name %><br>
+    <strong class="text-lg">試合タイプ:</strong> <%= @game_record.game_type %><br>
+    <strong class="text-lg">ホームチーム得点:</strong> <%= @game_record.score_home_team %><br>
+    <strong class="text-lg">アウェイチーム得点:</strong> <%= @game_record.score_away_team %><br>
+    <strong class="text-lg">日付:</strong> <%= @game_record.date.strftime("%Y-%m-%d") %><br>
+    <strong class="text-lg">概要:</strong> <%= @game_record.description.present? ? @game_record.description : "なし" %><br>
+  </p>
 
-<%= link_to '戻る', game_records_path %>
+  <div class="mt-6">
+    <%= link_to '戻る', game_records_path, class: "inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
+  </div>
+</div>
