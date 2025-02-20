@@ -1,4 +1,6 @@
 class GameRecordsController < ApplicationController
+  before_action :set_game_record, only: [ :edit, :update, :show ]
+
   def index
     @game_records = current_user.game_records.includes(:home_team, :away_team).order(date: :desc)
   end
@@ -25,10 +27,28 @@ class GameRecordsController < ApplicationController
   end
 
   def show
-    @game_record = GameRecord.find(params[:id])
+  end
+
+  def edit
+  end
+
+  def update
+    home_team = Team.find_or_create_by(name: params[:game_record][:home_team_name])
+    away_team = Team.find_or_create_by(name: params[:game_record][:away_team_name])
+
+    if @game_record.update(game_record_params)
+      @game_record.update(home_team_id: home_team.id, away_team_id: away_team.id)
+      redirect_to game_records_path, notice: "試合記録が更新されました。"
+    else
+      render :edit
+    end
   end
 
   private
+
+  def set_game_record
+    @game_record = GameRecord.find(params[:id])
+  end
 
   def game_record_params
     params.require(:game_record).permit(:date, :game_type, :score_home_team, :score_away_team, :description, :home_team_name, :away_team_name)
