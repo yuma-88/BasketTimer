@@ -46,7 +46,7 @@ class GameRecordsController < ApplicationController
 
   def destroy
     @game_record.destroy!
-    redirect_to game_records_path, notice: '試合記録が削除されました。'
+    redirect_to game_records_path, notice: "試合記録が削除されました。"
   end
 
   private
