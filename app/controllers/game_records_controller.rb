@@ -1,5 +1,5 @@
 class GameRecordsController < ApplicationController
-  before_action :set_game_record, only: [:edit, :update, :show]
+  before_action :set_game_record, only: [ :edit, :update, :show ]
 
   def index
     @game_records = current_user.game_records.includes(:home_team, :away_team).order(date: :desc)
@@ -38,7 +38,7 @@ class GameRecordsController < ApplicationController
 
     if @game_record.update(game_record_params)
       @game_record.update(home_team_id: home_team.id, away_team_id: away_team.id)
-      redirect_to game_records_path, notice: '試合記録が更新されました。'
+      redirect_to game_records_path, notice: "試合記録が更新されました。"
     else
       render :edit
     end
