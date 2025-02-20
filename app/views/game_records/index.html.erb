@@ -21,7 +21,7 @@
       <div class="bg-gray-100 p-3 text-center">
         <%= link_to '詳細', game_record_path(game_record), class: 'text-blue-500 hover:underline mr-2' %>
         <%= link_to '編集', edit_game_record_path(game_record), class: 'text-yellow-500 hover:underline mr-2' %>
-        <%= link_to '削除', game_record_path(game_record), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'text-red-500 hover:underline' %>
+        <%= link_to '削除', game_record_path(game_record), data: { turbo_method: :delete, confirm: '本当に削除しますか？' }, class: 'text-red-500 hover:underline' %>
       </div>
     </div>
   <% end %>
