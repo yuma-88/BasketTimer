@@ -1,5 +1,5 @@
 class GameRecordsController < ApplicationController
-  before_action :set_game_record, only: [ :edit, :update, :show ]
+  before_action :set_game_record, only: [ :edit, :update, :show, :destroy ]
 
   def index
     @game_records = current_user.game_records.includes(:home_team, :away_team).order(date: :desc)
@@ -42,6 +42,11 @@ class GameRecordsController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def destroy
+    @game_record.destroy!
+    redirect_to game_records_path, notice: '試合記録が削除されました。'
   end
 
   private
