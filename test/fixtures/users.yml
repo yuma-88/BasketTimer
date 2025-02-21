@@ -6,8 +6,8 @@
 #
 one:
   email: user_one@example.com
-  password_digest: <%= User.new(password: 'password').password_digest %>
+  password_digest: "$2a$12$yHIVZFgDl7qUJ3u.RsZaFuJpIZmPz7Ej8MFoxMNwLqfQFwZuMvT1G"  # "password" をハッシュ化した値
 
 two:
   email: user_two@example.com
-  password_digest: <%= User.new(password: 'password').password_digest %>
+  password_digest: "$2a$12$yHIVZFgDl7qUJ3u.RsZaFuJpIZmPz7Ej8MFoxMNwLqfQFwZuMvT1G"  # "password" をハッシュ化した値
