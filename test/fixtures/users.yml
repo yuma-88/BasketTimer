@@ -4,10 +4,8 @@
 # model remove the "{}" from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one:
-  email: user_one@example.com
-  password_digest: <%= 'password123'.crypt('$6$salt') %>
-
-two:
-  email: user_two@example.com
-  password_digest: <%= 'password123'.crypt('$6$salt') %>
+one: {}
+# column: value
+#
+two: {}
+# column: value
