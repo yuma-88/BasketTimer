@@ -6,8 +6,8 @@
 #
 one:
   email: user_one@example.com
-  password_digest: <%= BCrypt::Password.create('password') %>
+  password_digest: <%= 'password123'.crypt('$6$salt') %>
 
 two:
   email: user_two@example.com
-  password_digest: <%= BCrypt::Password.create('password') %>
+  password_digest: <%= 'password123'.crypt('$6$salt') %>
