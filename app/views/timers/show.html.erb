@@ -1,0 +1,61 @@
+<% content_for :title, "タイマー" %>
+<div data-controller="game_timer score shot_clock"
+     class="w-full h-screen bg-black text-white flex flex-col items-center justify-center">
+
+  <!-- 試合時間と増減ボタン -->
+  <div class="flex flex-col items-center gap-1">
+    <!-- 増減ボタン -->
+    <div class="flex gap-6 ">
+      <button data-action="click->game_timer#increaseMinute" class="text-gray-500 text-4xl">▲</button>
+      <button data-action="click->game_timer#decreaseMinute" class="text-gray-500 text-4xl">▼</button>
+      <button data-action="click->game_timer#increaseSecond" class="text-gray-500 text-4xl">▲</button>
+      <button data-action="click->game_timer#decreaseSecond" class="text-gray-500 text-4xl">▼</button>
+    </div>
+
+    <!-- 試合時間（クリックでスタート・ストップ） -->
+    <div class="text-yellow-400 font-bold tracking-wider cursor-pointer text-[clamp(2rem,30vw,30rem)]"
+         data-game_timer-target="time"
+         data-action="click->game_timer#toggleTimer">
+      10:00
+    </div>
+  </div>
+
+  <!-- チームスコア -->
+  <div class="flex justify-between items-center w-full max-w-3xl mt-6">
+    <div class="flex flex-col items-center ">
+      <div class="flex gap-4">
+        <button data-action="click->score#increaseTeamAScore" class="text-gray-500 text-4xl">▲</button>
+        <button data-action="click->score#decreaseTeamAScore" class="text-gray-500 text-4xl">▼</button>
+      </div>
+      <div class="text-yellow-400 text-7xl font-bold" data-score-target="teamAScore">0</div>
+    </div>
+    <div class="flex flex-col items-center mt-4">
+      <div class="flex gap-4">
+        <button data-action="click->shot_clock#increase" class="text-gray-500 text-4xl">▲</button>
+        <button data-action="click->shot_clock#decrease" class="text-gray-500 text-4xl">▼</button>
+      </div>
+      <div class="text-white text-5xl cursor-pointer"
+         data-shot_clock-target="time"
+         data-action="click->shot_clock#toggleShotClock">
+      24
+      </div>
+      <div class="flex gap-4 mt-2">
+        <button data-action="click->shot_clock#setTwentyFour" class="px-3 py-1 bg-gray-500 text-white rounded-md text-sm">24秒</button>
+        <button data-action="click->shot_clock#setFourteen" class="px-3 py-1 bg-gray-500 text-white rounded-md text-sm">14秒</button>
+        <button data-action="click->shot_clock#setTimeout" class="px-3 py-1 bg-red-500 text-white rounded-md text-sm">TO</button>
+      </div>
+    </div>
+    <div class="flex flex-col items-center">
+      <div class="flex gap-4">
+        <button data-action="click->score#increaseTeamBScore" class="text-gray-500 text-4xl">▲</button>
+        <button data-action="click->score#decreaseTeamBScore" class="text-gray-500 text-4xl">▼</button>
+      </div>
+      <div class="text-yellow-400 text-7xl font-bold" data-score-target="teamBScore">0</div>
+    </div>
+  </div>
+
+  <!-- 操作ボタン -->
+  <div class="mt-6 flex gap-4">
+    <button data-action="click->game_timer#reset" class="px-4 py-2 bg-gray-500 text-white rounded-md">リセット</button>
+  </div>
+</div>

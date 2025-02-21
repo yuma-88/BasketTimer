@@ -9,10 +9,16 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg/css/dseg.css">
+    <style>
+      .seven-segment {
+        font-family: 'DSEG7Classic-Bold', sans-serif;
+      }
+    </style>
   </head>
 
   <body>
-    <%= render 'shared/header' if content_for?(:header) %>  <!-- ヘッダーが必要なときだけレンダリング -->
     <%= yield %>
   </body>
 </html>
