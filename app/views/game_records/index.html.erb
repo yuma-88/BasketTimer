@@ -1,5 +1,17 @@
 <% content_for :title, "試合記録" %>
-<h1 class="text-3xl font-bold mb-6">試合記録</h1>
+
+<!-- ヘッダー -->
+<header class="bg-gray-800 text-white py-4">
+  <div class="container mx-auto flex justify-between items-center px-4">
+    <h1 class="text-xl font-bold">試合記録</h1>
+    <nav class="space-x-4">
+      <%= link_to "トップ", root_path, class: "hover:underline" %>
+      <% if user_signed_in? %>
+        <%= link_to "ログアウト", destroy_user_session_path, data: { "turbo-method": "delete", confirm: "ログアウトしますか？" }, class: "hover:underline text-red-400" %>
+      <% end %>
+    </nav>
+  </div>
+</header>
 
 <div class="mb-6">
   <%= link_to '新規作成', new_game_record_path, class: 'inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-lg hover:bg-blue-700 transition duration-200' %>
