@@ -11,6 +11,10 @@ class ApplicationController < ActionController::Base
     game_records_path # ログイン後に試合記録一覧ページへ遷移
   end
 
+  def after_sign_out_path_for(resource_or_scope)
+    menus_path
+  end
+
   protected
 
   def configure_permitted_parameters
