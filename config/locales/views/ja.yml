@@ -1,0 +1,9 @@
+ja:
+  views:
+    top: 
+      title: トップ
+    users:
+      new:
+        title: "新規登録"
+      edit:
+        title: "ユーザー情報編集"
