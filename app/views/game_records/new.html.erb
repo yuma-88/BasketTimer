@@ -2,6 +2,7 @@
 <h1 class="text-2xl font-semibold mb-6">新規作成</h1>
 
 <%= form_with(model: @game_record, local: true) do |form| %>
+
   <% if @game_record.errors.any? %>
     <div class="alert alert-danger">
       <ul>
@@ -11,7 +12,7 @@
       </ul>
     </div>
   <% end %>
-
+  
   <div class="mb-4">
     <%= form.label :date, '日付', class: 'block text-sm font-medium text-gray-700' %>
     <%= form.date_field :date, class: 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500' %>

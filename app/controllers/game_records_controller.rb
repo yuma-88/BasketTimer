@@ -22,7 +22,7 @@ class GameRecordsController < ApplicationController
     if @game_record.save
       redirect_to game_records_path, notice: "試合記録が作成されました。"
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -40,7 +40,7 @@ class GameRecordsController < ApplicationController
       @game_record.update(home_team_id: home_team.id, away_team_id: away_team.id)
       redirect_to game_records_path, notice: "試合記録が更新されました。"
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

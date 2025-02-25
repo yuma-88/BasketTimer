@@ -1,0 +1,26 @@
+ja:
+  activerecord:
+    models:
+      user: ユーザー
+      game_record: 試合記録
+    attributes:
+      user:
+        email: メールアドレス
+        username: ユーザー名
+        password: パスワード
+        password_confirmation: パスワード確認
+      game_record:
+        date: 日付
+        home_team_name: ホームチーム
+        away_team_name: アウェイチーム
+        score_home_team: ホームチーム得点
+        score_away_team: アウェイチーム得点
+    errors:
+      models:
+        game_record:
+          attributes:
+            score_home_team:
+              greater_than_or_equal_to: "は0以上である必要があります"
+            score_away_team:
+              greater_than_or_equal_to: "は0以上である必要があります"
+

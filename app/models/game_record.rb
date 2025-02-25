@@ -7,6 +7,10 @@ class GameRecord < ApplicationRecord
   validates :home_team_name, presence: true
   validates :away_team_name, presence: true
 
+  # スコアが0以上であることを確認
+  validates :score_home_team, numericality: { greater_than_or_equal_to: 0, only_integer: true }
+  validates :score_away_team, numericality: { greater_than_or_equal_to: 0, only_integer: true }
+
   # 仮想的な属性を定義
   attr_accessor :home_team_name, :away_team_name
 

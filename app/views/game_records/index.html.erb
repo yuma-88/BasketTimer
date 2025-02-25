@@ -19,18 +19,19 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
   <% @game_records.each do |game_record| %>
     <div class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-200">
-      <div class="p-4">
-        <div class="text-lg font-semibold text-gray-800">
-          <%= game_record.home_team.name %> vs <%= game_record.away_team.name %>
+      <%= link_to game_record_path(game_record) do %>
+        <div class="p-4">
+          <div class="text-lg font-semibold text-gray-800">
+            <%= game_record.home_team.name %> vs <%= game_record.away_team.name %>
+          </div>
+          <div class="text-sm text-gray-600 mt-2">
+            <p>日付: <%= game_record.date.strftime("%Y-%m-%d") %></p>
+            <p>試合タイプ: <%= game_record.game_type %></p>
+            <p>得点: <%= game_record.score_home_team %> - <%= game_record.score_away_team %></p>
+          </div>
         </div>
-        <div class="text-sm text-gray-600 mt-2">
-          <p>日付: <%= game_record.date.strftime("%Y-%m-%d") %></p>
-          <p>試合タイプ: <%= game_record.game_type %></p>
-          <p>得点: <%= game_record.score_home_team %> - <%= game_record.score_away_team %></p>
-        </div>
-      </div>
+      <% end %>
       <div class="bg-gray-100 p-3 text-center">
-        <%= link_to '詳細', game_record_path(game_record), class: 'text-blue-500 hover:underline mr-2' %>
         <%= link_to '編集', edit_game_record_path(game_record), class: 'text-yellow-500 hover:underline mr-2' %>
         <%= link_to '削除', game_record_path(game_record), data: { turbo_method: :delete, confirm: '本当に削除しますか？' }, class: 'text-red-500 hover:underline' %>
       </div>
