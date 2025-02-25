@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   # root "posts#index"
   root "top#index"
 
+  get "/menus", to: "menus#index"
   get "/timers", to: "timers#show"
   get "/game_records", to: "game_records#index"
   get "/rulegpts", to: "rulegpts#index"
