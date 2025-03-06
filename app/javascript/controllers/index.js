@@ -12,3 +12,7 @@ application.register("score", ScoreController)
 
 import ShotClockController from "./shot_clock_controller"
 application.register("shot_clock", ShotClockController)
+
+import SettingsController from "./settings_controller"
+application.register("settings", SettingsController)
+

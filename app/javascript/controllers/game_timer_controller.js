@@ -6,9 +6,28 @@ export default class extends Controller {
 
   connect() {
     this.runningValue = false;
-    this.minutesValue = 10; // 初期値を10分に設定
-    this.secondsValue = 0;
+    this.loadSettings(); // 設定を読み込む
     this.timer = null;
+    this.updateDisplay();
+
+    // 設定更新イベントをリッスン
+    window.addEventListener("settings:updated", () => this.loadSettings());
+  }
+
+  disconnect() {
+    // イベントリスナーを削除
+    window.removeEventListener("settings:updated", () => this.loadSettings());
+  }
+
+  loadSettings() {
+    const savedSettings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
+    const mainTime = savedSettings.mainTime || "10:00";
+    
+    // メインタイマーの時間を設定
+    const [minutes, seconds] = mainTime.split(":").map(Number);
+    this.minutesValue = minutes;
+    this.secondsValue = seconds;
+
     this.updateDisplay();
   }
 
@@ -34,9 +53,7 @@ export default class extends Controller {
 
   reset() {
     this.stop();
-    this.minutesValue = 10;
-    this.secondsValue = 0;
-    this.updateDisplay();
+    this.loadSettings(); // 設定から再読み込み
   }
 
   countdown() {
