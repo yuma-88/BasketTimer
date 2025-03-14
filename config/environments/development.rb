@@ -31,7 +31,7 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  #下記によりtailwindが反映された
+  # 下記によりtailwindが反映された
   config.assets.compile = true
   config.assets.digest = false
 
