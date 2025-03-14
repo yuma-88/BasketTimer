@@ -8,6 +8,14 @@
     <div class="flex gap-6 ">
       <button data-action="click->game_timer#increaseMinute" class="text-gray-500 text-4xl">▲</button>
       <button data-action="click->game_timer#decreaseMinute" class="text-gray-500 text-4xl">▼</button>
+        <select data-target="game_timer.select" class="select bg-black text-yellow-400 text-4xl text-center">
+          <option>P1</option>
+          <option>P2</option>
+          <option>ハーフ</option>
+          <option>P3</option>
+          <option>P4</option>
+          <option>インターバル</option>
+        </select>
       <button data-action="click->game_timer#increaseSecond" class="text-gray-500 text-4xl">▲</button>
       <button data-action="click->game_timer#decreaseSecond" class="text-gray-500 text-4xl">▼</button>
     </div>
