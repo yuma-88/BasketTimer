@@ -16,3 +16,5 @@ application.register("shot_clock", ShotClockController)
 import SettingsController from "./settings_controller"
 application.register("settings", SettingsController)
 
+import SidemenuController from "./sidemenu_controller";
+application.register("sidemenu", SidemenuController);
