@@ -44,18 +44,33 @@ export default class extends Controller {
     clearInterval(this.timer);
   }
 
-  setTwentyFour() {
-    this.stop();
-    this.secondsValue = 24; // 24秒に戻す
+  reset() {
+    this.secondsValue = 24; // 初期状態に戻す（24秒）
     this.updateDisplay();
-    this.start();
+  }
+
+  setTwentyFour() {
+    // ストップ状態の場合は、24秒に設定して停止
+    if (!this.runningValue) {
+      this.secondsValue = 24; // 24秒に設定
+      this.updateDisplay(); // 画面に表示
+    } else {
+      // 動作中の場合は、24秒に設定してすぐに再開
+      this.secondsValue = 24; // 24秒に設定
+      this.updateDisplay(); // 画面に表示
+      this.start(); // 再開
+    }
   }
 
   setFourteen() {
-    this.stop();
-    this.secondsValue = 14; // 14秒に変更
-    this.updateDisplay();
-    this.start();
+    if (!this.runningValue) {
+      this.secondsValue = 14;
+      this.updateDisplay();
+    } else {
+      this.secondsValue = 14;
+      this.updateDisplay();
+      this.start();
+    }
   }
 
   setTimeout() {

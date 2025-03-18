@@ -35,4 +35,20 @@ export default class extends Controller {
   updateScore(target, value) {
     this[target + "Target"].textContent = value
   }
+
+  swapScores() {
+    const temp = this.teamAScoreValue;
+    this.teamAScoreValue = this.teamBScoreValue;
+    this.teamBScoreValue = temp;
+
+    this.updateScore("teamAScore", this.teamAScoreValue);
+    this.updateScore("teamBScore", this.teamBScoreValue);
+  }
+
+  resetScores() {
+    this.teamAScoreValue = 0
+    this.teamBScoreValue = 0
+    this.updateScore("teamAScore", this.teamAScoreValue)
+    this.updateScore("teamBScore", this.teamBScoreValue)
+  }
 }

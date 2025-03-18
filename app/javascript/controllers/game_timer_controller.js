@@ -108,7 +108,7 @@ export default class extends Controller {
     clearInterval(this.timer);
   }
 
-  reset() {
+  resetTime() {
     this.stop();
     this.loadSettings(); // 設定から再読み込み
   }
@@ -163,4 +163,21 @@ export default class extends Controller {
   updateDisplay() {
     this.timeTarget.textContent = `${String(this.minutesValue).padStart(2, "0")}:${String(this.secondsValue).padStart(2, "0")}`;
   }
+
+  resetAll() {
+    // 試合時間のリセット
+    this.resetTime();
+  
+    // ショットクロックのリセット
+    const shotClockController = this.application.controllers.find(controller => controller.identifier === 'shot_clock');
+    if (shotClockController) {
+      shotClockController.reset();
+    }
+  
+    // スコアのリセット
+    const scoreController = this.application.controllers.find(controller => controller.identifier === 'score');
+    if (scoreController) {
+      scoreController.resetScores();
+    }
+  }  
 }
