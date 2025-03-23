@@ -11,24 +11,28 @@ export default class extends Controller {
   increaseTeamAScore() {
     this.teamAScoreValue++
     this.updateScore("teamAScore", this.teamAScoreValue)
+    this.playClickSound();
   }
 
   decreaseTeamAScore() {
     if (this.teamAScoreValue > 0) {
       this.teamAScoreValue--
       this.updateScore("teamAScore", this.teamAScoreValue)
+      this.playClickSound();
     }
   }
 
   increaseTeamBScore() {
     this.teamBScoreValue++
     this.updateScore("teamBScore", this.teamBScoreValue)
+    this.playClickSound();
   }
 
   decreaseTeamBScore() {
     if (this.teamBScoreValue > 0) {
       this.teamBScoreValue--
       this.updateScore("teamBScore", this.teamBScoreValue)
+      this.playClickSound();
     }
   }
 
@@ -43,6 +47,7 @@ export default class extends Controller {
 
     this.updateScore("teamAScore", this.teamAScoreValue);
     this.updateScore("teamBScore", this.teamBScoreValue);
+    this.playClickSound();
   }
 
   resetScores() {
@@ -50,5 +55,13 @@ export default class extends Controller {
     this.teamBScoreValue = 0
     this.updateScore("teamAScore", this.teamAScoreValue)
     this.updateScore("teamBScore", this.teamBScoreValue)
+    this.playClickSound();
+  }
+
+  playClickSound() {
+    const audioController = this.application.controllers.find(controller => controller.identifier === 'audio');
+    if (audioController) {
+      audioController.playClickSound();
+    }
   }
 }

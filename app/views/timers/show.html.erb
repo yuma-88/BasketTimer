@@ -1,5 +1,5 @@
 <% content_for :title, "タイマー" %>
-<div data-controller="game_timer score shot_clock sidemenu"
+<div data-controller="game_timer score shot_clock sidemenu audio"
      class="w-full h-screen bg-black text-white flex flex-col items-center justify-center px-4 sm:px-8 md:px-16 lg:px-20 mx-auto relative">
 
   <!-- 左サイドバー -->
@@ -11,7 +11,7 @@
   <!-- サイドメニュー -->
   <div data-sidemenu-target="menu" class="fixed left-0 top-0 h-full w-48 bg-gray-300 text-black py-4 px-6 transform -translate-x-full hidden transition-transform duration-300 ease-in-out z-20">
     <ul class="flex flex-col gap-4 text-lg">
-      <button data-action="click->sidemenu#close">閉じる</button>
+      <button data-action="click->sidemenu#toggle">閉じる</button>
       <button data-action="click->game_timer#resetTime">タイマーリセット</button>
       <button data-action="click->score#resetScores">スコアリセット</button>
       <button onclick="window.location='<%= settings_path %>'">設定</button>
@@ -24,7 +24,7 @@
 
   <!-- 右サイドバー -->
   <div class="absolute right-0 top-0 h-full w-10 bg-gray-700 flex flex-col items-center justify-between py-4 z-10">
-    <button class="text-white text-2xl">🔈</button>
+    <button class="text-white text-2xl" data-action="click->audio#playBuzzerSound">🔈</button>
     <button class="text-white text-2xl" data-action="click->score#swapScores">🔄</button>
   </div>
 
