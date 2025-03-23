@@ -5,13 +5,13 @@ export default class extends Controller {
 
   connect() {
     // 音声オブジェクトの作成（1回だけ作成）
-    this.endSound = new Audio("/assets/sounds/end.mp3");
-    this.buzzerSound = new Audio("/assets/sounds/buzzer.mp3");
+    this.endSound = new Audio("/sounds/end.mp3");
+    this.buzzerSound = new Audio("/sounds/buzzer.mp3");
   }
 
   // 音声を再生するメソッド
   playClickSound() {
-    const clickSound = new Audio("/assets/sounds/click.mp3");
+    const clickSound = new Audio("/sounds/click.mp3");
     clickSound.play();
   }
 
