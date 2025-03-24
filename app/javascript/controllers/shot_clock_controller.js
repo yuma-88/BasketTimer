@@ -24,6 +24,7 @@ export default class extends Controller {
     } else {
       this.start();
     }
+    this.playClickSound();
   }
 
   start() {

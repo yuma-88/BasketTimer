@@ -24,7 +24,7 @@
 
   <!-- 右サイドバー -->
   <div class="absolute right-0 top-0 h-full w-10 bg-gray-700 flex flex-col items-center justify-between py-4 z-10">
-    <button class="text-white text-2xl" data-action="click->audio#playBuzzerSound">🔈</button>
+    <button class="text-white text-2xl" data-action="mousedown->audio#playBuzzerSound mouseup->audio#stopBuzzerSound">🔈</button>
     <button class="text-white text-2xl" data-action="click->score#swapScores">🔄</button>
   </div>
 
