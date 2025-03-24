@@ -41,10 +41,7 @@ export default class extends Controller {
     this.halfTime = halfTime;
     
     // P1, P2, P3, P4の時間設定（ここに仮の時間を設定）
-    this.p1Time = savedSettings.p1Time || "10:00";
-    this.p2Time = savedSettings.p2Time || "10:00";
-    this.p3Time = savedSettings.p3Time || "10:00";
-    this.p4Time = savedSettings.p4Time || "10:00";
+    this.periodTime = savedSettings.mainTime || "10:00";
 
     this.updateDisplay();
   }
@@ -63,29 +60,15 @@ export default class extends Controller {
       const [halfMinutes, halfSeconds] = this.halfTime.split(":").map(Number);
       this.minutesValue = halfMinutes;
       this.secondsValue = halfSeconds;
-    } else if (selectedOption === "P1") {
-      // P1時間を設定
-      const [p1Minutes, p1Seconds] = this.p1Time.split(":").map(Number);
-      this.minutesValue = p1Minutes;
-      this.secondsValue = p1Seconds;
-    } else if (selectedOption === "P2") {
-      // P2時間を設定
-      const [p2Minutes, p2Seconds] = this.p2Time.split(":").map(Number);
-      this.minutesValue = p2Minutes;
-      this.secondsValue = p2Seconds;
-    } else if (selectedOption === "P3") {
-      // P3時間を設定
-      const [p3Minutes, p3Seconds] = this.p3Time.split(":").map(Number);
-      this.minutesValue = p3Minutes;
-      this.secondsValue = p3Seconds;
-    } else if (selectedOption === "P4") {
-      // P4時間を設定
-      const [p4Minutes, p4Seconds] = this.p4Time.split(":").map(Number);
-      this.minutesValue = p4Minutes;
-      this.secondsValue = p4Seconds;
+    } else if (selectedOption === "P1", "P2", "P3", "P4") {
+      // ピリオド時間を設定
+      const [periodMinutes, periodSeconds] = this.periodTime.split(":").map(Number);
+      this.minutesValue = periodMinutes;
+      this.secondsValue = periodSeconds;
     }
     
     this.updateDisplay();
+    this.playClickSound();
   }
 
   toggleTimer() {
@@ -94,6 +77,7 @@ export default class extends Controller {
     } else {
       this.start();
     }
+    this.playClickSound();
   }
 
   start() {
@@ -109,6 +93,9 @@ export default class extends Controller {
   }
 
   resetTime() {
+    if (!this.isResetAll) {
+      this.playClickSound(); // タイマーリセット時に音を鳴らす
+    }
     this.stop();
     this.loadSettings(); // 設定から再読み込み
   }
@@ -116,6 +103,7 @@ export default class extends Controller {
   countdown() {
     if (this.minutesValue === 0 && this.secondsValue === 0) {
       this.stop();
+      this.playEndSound();
       return;
     }
 
@@ -131,12 +119,14 @@ export default class extends Controller {
   increaseMinute() {
     this.minutesValue += 1;
     this.updateDisplay();
+    this.playClickSound();
   }
 
   decreaseMinute() {
     if (this.minutesValue > 0) {
       this.minutesValue -= 1;
       this.updateDisplay();
+      this.playClickSound();
     }
   }
 
@@ -148,6 +138,7 @@ export default class extends Controller {
       this.secondsValue = 0;
     }
     this.updateDisplay();
+    this.playClickSound();
   }
 
   decreaseSecond() {
@@ -158,13 +149,30 @@ export default class extends Controller {
       this.secondsValue = 59;
     }
     this.updateDisplay();
+    this.playClickSound();
   }
 
   updateDisplay() {
     this.timeTarget.textContent = `${String(this.minutesValue).padStart(2, "0")}:${String(this.secondsValue).padStart(2, "0")}`;
   }
 
+  // 音声を再生するメソッド
+  playClickSound() {
+    const audioController = this.application.controllers.find(controller => controller.identifier === 'audio');
+    if (audioController) {
+      audioController.playClickSound();
+    }
+  }
+
+  playEndSound() {
+    const audioController = this.application.controllers.find(controller => controller.identifier === 'audio');
+    if (audioController) {
+      audioController.playEndSound();
+    }
+  }
+
   resetAll() {
+    this.isResetAll = true; // resetAllのフラグを立てる
     // 試合時間のリセット
     this.resetTime();
   
@@ -179,5 +187,7 @@ export default class extends Controller {
     if (scoreController) {
       scoreController.resetScores();
     }
+
+    this.isResetAll = false; // 処理が終わったらフラグを戻す
   }  
 }

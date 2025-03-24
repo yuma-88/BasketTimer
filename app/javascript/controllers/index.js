@@ -18,3 +18,6 @@ application.register("settings", SettingsController)
 
 import SidemenuController from "./sidemenu_controller";
 application.register("sidemenu", SidemenuController);
+
+import AudioController from "./audio_controller";
+application.register("audio", AudioController);
