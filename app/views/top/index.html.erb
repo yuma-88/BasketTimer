@@ -1,9 +1,9 @@
 <% content_for :title, "トップ" %>
 
-<div class="flex flex-col items-center justify-center min-h-screen text-white text-center bg-black">
+<div data-controller="audio" class="flex flex-col items-center justify-center min-h-screen text-white text-center bg-black">
   <h1 class="text-7xl font-bold mb-6">BasketTimer</h1>
   
-  <%= link_to menus_path, class: "bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 block text-center text-white" do %>
+  <button onclick="window.location='<%= menus_path %>'" data-action="click->audio#playClickSound" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 block text-center text-white">
     <span class="text-xl font-semibold">STRAT</span>
-  <% end %>
+  </button>
 </div>
