@@ -49,6 +49,9 @@ export default class extends Controller {
   handleSelectChange(event) {
     const selectedOption = event.target.value;
 
+    // インターバルやハーフタイムが選ばれた場合、カウントダウン音声を無効にするフラグを立てる
+    this.preventCountdownSound = (selectedOption === "インターバル" || selectedOption === "ハーフ");
+
     // 選択に応じた時間を設定
     if (selectedOption === "インターバル") {
       // インターバル時間を設定
@@ -114,6 +117,9 @@ export default class extends Controller {
       this.secondsValue -= 1;
     }
     this.updateDisplay();
+
+    // インターバルやハーフタイムの場合、カウントダウン音声を再生しない
+    if (this.preventCountdownSound) return;
 
     // 1:00 (60秒) で音声を再生
     if (this.minutesValue === 1 && this.secondsValue === 0) {
