@@ -114,6 +114,16 @@ export default class extends Controller {
       this.secondsValue -= 1;
     }
     this.updateDisplay();
+
+    // 1:00 (60秒) で音声を再生
+    if (this.minutesValue === 1 && this.secondsValue === 0) {
+      this.playCountdownSound(60);  // 60秒の音声を再生
+    }
+
+    // カウントダウン音声を再生
+    if ([30, 15, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].includes(this.secondsValue) && this.minutesValue === 0) {
+      this.playCountdownSound(this.secondsValue);
+    }
   }
 
   increaseMinute() {
@@ -168,6 +178,14 @@ export default class extends Controller {
     const audioController = this.application.controllers.find(controller => controller.identifier === 'audio');
     if (audioController) {
       audioController.playEndSound();
+    }
+  }
+
+  // カウントダウン音声再生メソッド
+  playCountdownSound(seconds) {
+    const audioController = this.application.controllers.find(controller => controller.identifier === 'audio');
+    if (audioController) {
+      audioController.playCountdownSound(seconds);
     }
   }
 
