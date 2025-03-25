@@ -24,34 +24,62 @@ export default class extends Controller {
       1: new Audio("/sounds/countdown_2.mp3"),
       0: new Audio("/sounds/countdown_1.mp3"),
     };
+
+    // 音声設定をロード
+    this.loadAudioSettings();
   }
 
-  // 音声を再生するメソッド
+  // 音声設定をロード
+  loadAudioSettings() {
+    const savedSettings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
+    const enableAudio = savedSettings.enableAudio ?? true; // 初期状態で音声を有効
+    const countdownVoice = savedSettings.countdownVoice ?? true; // 初期状態でカウントダウン音声を有効
+
+    if (!enableAudio) {
+      this.disableAudio(); // 音声が無効の場合、音声を無効にする
+    }
+
+    if (!countdownVoice) {
+      this.disableCountdownVoice(); // countdownVoiceが無効の場合、カウントダウン音声を無効にする
+    }
+  }
+
+  // 音声を無効にする
+  disableAudio() {
+    // すべての音声オブジェクトを無効にする
+    this.endSound = null;
+  }
+
+  // カウントダウン音声を無効にする
+  disableCountdownVoice() {
+    // カウントダウン音声だけを無効にする
+    this.countdownSounds = {};
+  }
+
+  // 音声を再生するメソッド（音声設定が有効な場合のみ）
   playClickSound() {
-    const clickSound = new Audio("/sounds/click.mp3");
-    clickSound.play();
+    if (this.endSound) { // 音声設定が有効な場合のみ再生
+      const clickSound = new Audio("/sounds/click.mp3");
+      clickSound.play();
+    }
   }
 
   playBuzzerSound() {
-    // ボタンが押されている間、音を再生し続ける
-    this.buzzerSound.loop = true; // ループ再生を設定
-  
-    // 音を開始する
-    if (this.buzzerSound.paused) {
-      this.buzzerSound.play();
-    }
+      this.buzzerSound.loop = true; // ループ再生を設定
+      if (this.buzzerSound.paused) {
+        this.buzzerSound.play();
+      }
   }
-  
+
   stopBuzzerSound() {
-    // ボタンが離されたら、音を停止する
     if (!this.buzzerSound.paused) {
       this.buzzerSound.pause();
       this.buzzerSound.currentTime = 0; // 再生位置をリセット
     }
   }
-  
+
   playEndSound() {
-    if (this.endSound) {
+    if (this.endSound) { // 音声設定が有効な場合のみ再生
       this.endSound.play();
     }
   }
