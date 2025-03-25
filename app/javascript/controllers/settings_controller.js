@@ -9,6 +9,7 @@ export default class extends Controller {
 
   connect() {
     this.loadSettings();
+    this.updateAudioSettings();  // 初期状態の音声設定を反映
   }
 
   // 設定を読み込む
@@ -23,8 +24,40 @@ export default class extends Controller {
     this.showScoreTarget.checked = savedSettings.showScore || false;
     this.show24TimerTarget.checked = savedSettings.show24Timer || false;
     this.sync24TimerTarget.checked = savedSettings.sync24Timer || false;
-    this.enableAudioTarget.checked = savedSettings.enableAudio || false;
-    this.countdownVoiceTarget.checked = savedSettings.countdownVoice || false;
+    this.enableAudioTarget.checked = savedSettings.enableAudio ?? true;
+    this.countdownVoiceTarget.checked = savedSettings.countdownVoice ?? true;
+  }
+
+  // 音声設定を更新する
+  updateAudioSettings() {
+    const enableAudio = this.enableAudioTarget.checked;
+
+    // `enableAudio` がオフの場合、音声関連の設定もオフにし、無効にする
+    if (!enableAudio) {
+      this.countdownVoiceTarget.checked = false;  // カウントダウン音声をオフ
+      this.countdownVoiceTarget.disabled = true;  // カウントダウン音声のチェックボックスを無効にする
+    } else {
+      this.countdownVoiceTarget.disabled = false;  // カウントダウン音声のチェックボックスを有効にする
+    }
+  }
+
+  // 設定を保存する
+  saveSettings(event) {
+    const target = event.target;
+    const settingName = target.dataset.settingsTarget;
+    const settingValue = target.checked;
+
+    const settings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
+    settings[settingName] = settingValue;
+    sessionStorage.setItem("gameSettings", JSON.stringify(settings));
+
+    // 設定更新イベントを発火
+    window.dispatchEvent(new Event("settings:updated"));
+
+    // 音声設定を更新
+    if (settingName === "enableAudio") {
+      this.updateAudioSettings();  // `enableAudio` が変更された場合は音声設定を再評価
+    }
   }
 
   // 時間を編集モードにする
