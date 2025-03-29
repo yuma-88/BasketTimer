@@ -4,7 +4,8 @@ export default class extends Controller {
   static targets = [
     "mainTime", "breakTime", "halfTime",
     "endless", "showMainTimer", "showScore",
-    "show24Timer", "sync24Timer", "enableAudio", "countdownVoice"
+    "show24Timer", "sync24Timer", "enableAudio",
+    "countdownVoice", "memberChangeVoice"
   ];
 
   connect() {
@@ -26,20 +27,37 @@ export default class extends Controller {
     this.sync24TimerTarget.checked = savedSettings.sync24Timer || false;
     this.enableAudioTarget.checked = savedSettings.enableAudio ?? true;
     this.countdownVoiceTarget.checked = savedSettings.countdownVoice ?? true;
+    this.memberChangeVoiceTarget.checked = savedSettings.memberChangeVoice ?? false;
   }
 
   // 音声設定を更新する
   updateAudioSettings() {
     const enableAudio = this.enableAudioTarget.checked;
-
+  
     // `enableAudio` がオフの場合、音声関連の設定もオフにし、無効にする
     if (!enableAudio) {
       this.countdownVoiceTarget.checked = false;  // カウントダウン音声をオフ
+      this.memberChangeVoiceTarget.checked = false;  // メンバーチェンジ音声をオフ
       this.countdownVoiceTarget.disabled = true;  // カウントダウン音声のチェックボックスを無効にする
+      this.memberChangeVoiceTarget.disabled = true;  // メンバーチェンジ音声のチェックボックスを無効にする
+  
+      // 設定をsessionStorageに保存（音声設定を無効化）
+      const settings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
+      settings["enableAudio"] = false;
+      settings["countdownVoice"] = false;
+      settings["memberChangeVoice"] = false;
+      sessionStorage.setItem("gameSettings", JSON.stringify(settings));
     } else {
       this.countdownVoiceTarget.disabled = false;  // カウントダウン音声のチェックボックスを有効にする
+      this.memberChangeVoiceTarget.disabled = false;  // メンバーチェンジ音声のチェックボックスを有効にする
+  
+      // `enableAudio` がオンの場合、セッションストレージで音声設定をオンにする
+      const settings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
+      settings["enableAudio"] = true;
+      sessionStorage.setItem("gameSettings", JSON.stringify(settings));
     }
   }
+  
 
   // 設定を保存する
   saveSettings(event) {
