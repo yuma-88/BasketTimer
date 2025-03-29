@@ -7,6 +7,7 @@ export default class extends Controller {
     // 音声オブジェクトの作成（1回だけ作成）
     this.endSound = new Audio("/sounds/end.mp3");
     this.buzzerSound = new Audio("/sounds/buzzer.mp3");
+    this.memberChangeSound = new Audio("/sounds/member_change.mp3");
 
     // 各カウントダウン音声ファイルの作成
     this.countdownSounds = {
@@ -78,6 +79,10 @@ export default class extends Controller {
     }
   }
 
+  playMemberChangeBuzzerSound() {
+    this.buzzerSound.play();
+  }
+
   playEndSound() {
     if (this.endSound) { // 音声設定が有効な場合のみ再生
       this.endSound.play();
@@ -89,5 +94,9 @@ export default class extends Controller {
     if (this.countdownSounds[seconds]) {
       this.countdownSounds[seconds].play();
     }
+  }
+
+  playMemberChangeSound() {
+    this.memberChangeSound.play();
   }
 }
