@@ -61,6 +61,7 @@ export default class extends Controller {
   playClickSound() {
     if (this.endSound) { // 音声設定が有効な場合のみ再生
       const clickSound = new Audio("/sounds/click.mp3");
+      clickSound.volume = 0.3;
       clickSound.play();
     }
   }

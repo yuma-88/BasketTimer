@@ -119,7 +119,7 @@ export default class extends Controller {
   start() {
     if (!this.runningValue) {
       this.runningValue = true;
-      this.timer = setInterval(() => this.countdown(), 1000);
+      this.timer = setInterval(() => this.countdown(), 100); // 100ミリ秒でカウントダウン
     }
   }
 
@@ -137,34 +137,64 @@ export default class extends Controller {
   }
 
   countdown() {
-    if (this.minutesValue === 0 && this.secondsValue === 0) {
+    // 秒数が0になったらタイマーを止め、終了音を鳴らす
+    if (this.minutesValue === 0 && this.secondsValue <= 0) {
       this.stop();
       this.playEndSound();
       return;
     }
   
-    if (this.secondsValue === 0) {
-      this.minutesValue -= 1;
-      this.secondsValue = 59;
+    // 秒数が0になった場合、分を1減らして秒数を59.9秒に設定
+    if (this.secondsValue <= 0) {
+      if (this.minutesValue > 0) {
+        this.minutesValue -= 1;
+        this.secondsValue = 59.9;
+      } else {
+        this.secondsValue = 0; // 負の秒数を防ぐ
+      }
     } else {
-      this.secondsValue -= 1;
+      // 秒数を0.1秒ずつ減少
+      this.secondsValue -= 0.1;
     }
+
+    // 秒数が0未満にならないように調整
+    if (this.secondsValue < 0) {
+      this.secondsValue = 0;
+    }
+  
+    // 秒数を更新
     this.updateDisplay();
   
     // インターバルやハーフタイムの場合、カウントダウン音声を再生しない
     if (this.preventCountdownSound) return;
   
-    // 1:00 (60秒) で音声を再生
-    if (this.minutesValue === 1 && this.secondsValue === 0) {
-      this.playCountdownSound(60);  // 60秒の音声を再生
+    // 1分00秒で音声を再生
+    if (this.minutesValue === 1 && this.secondsValue <= 0.1) {
+      this.playCountdownSound(60);
     }
   
     // メンバーチェンジの処理を呼び出す
     this.handleMemberChange();
   
-    // カウントダウン音声を再生
-    if ([30, 15, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].includes(this.secondsValue) && this.minutesValue === 0) {
-      this.playCountdownSound(this.secondsValue);
+    // 1秒間隔でカウントダウン音声を再生
+    if ([30, 15, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].includes(Math.floor(this.secondsValue)) && this.minutesValue === 0) {
+      this.playCountdownSound(Math.floor(this.secondsValue));
+    }
+  }
+  
+  updateDisplay() {
+    // 秒数を整数に切り捨て
+    const secondsInt = Math.floor(this.secondsValue);
+  
+    // 分が1桁の場合はそのまま表示、二桁の場合はゼロ埋め
+    const minutesFormatted = `${this.minutesValue}`;
+    const secondsFormatted = secondsInt < 10 ? `0${secondsInt}` : `${secondsInt}`;
+  
+    // 秒数が1分未満の場合は小数点を含む表示に切り替える
+    if (this.minutesValue < 1) {
+      this.timeTarget.textContent = `${this.secondsValue.toFixed(1)}`;
+    } else {
+      this.timeTarget.textContent = `${minutesFormatted}:${secondsFormatted}`;
     }
   }
 
@@ -202,10 +232,6 @@ export default class extends Controller {
     }
     this.updateDisplay();
     this.playClickSound();
-  }
-
-  updateDisplay() {
-    this.timeTarget.textContent = `${String(this.minutesValue).padStart(2, "0")}:${String(this.secondsValue).padStart(2, "0")}`;
   }
 
   playClickSound() {

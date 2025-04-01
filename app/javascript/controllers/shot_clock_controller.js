@@ -47,6 +47,7 @@ export default class extends Controller {
   }
 
   reset() {
+    this.stop();
     this.secondsValue = 24; // 初期状態に戻す（24秒）
     this.updateDisplay();
   }
