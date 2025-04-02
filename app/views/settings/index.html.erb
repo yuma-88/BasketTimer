@@ -10,7 +10,7 @@
   <div class="bg-white p-4 rounded-lg mb-4 shadow">
     <div class="space-y-2">
       <div class="flex justify-between items-center border-b pb-1">
-        <span>メイン時間（試合時間）</span>
+        <span>メインタイム（試合時間）</span>
         <span data-settings-target="mainTime" class="text-gray-700 cursor-pointer"
               data-action="click->settings#editTime blur->settings#saveTime keydown->settings#handleEnter">10:00</span>
       </div>
@@ -20,17 +20,13 @@
               data-action="click->settings#editTime blur->settings#saveTime keydown->settings#handleEnter">1:00</span>
       </div>
       <div class="flex justify-between items-center border-b pb-1">
-        <span>ハーフ時間（P2,P3の間）</span>
+        <span>ハーフタイム（P2,P3の間）</span>
         <span data-settings-target="halfTime" class="text-gray-700 cursor-pointer"
               data-action="click->settings#editTime blur->settings#saveTime keydown->settings#handleEnter">10:00</span>
       </div>
-      <div class="flex justify-between items-center border-b pb-1">
+      <div class="flex justify-between items-center">
         <span>エンドレス（メインとインターバルの繰り返し）</span>
         <input type="checkbox" data-settings-target="endless" class="toggle" data-action="change->settings#saveSettings">
-      </div>
-      <div class="flex justify-between items-center">
-        <span>スコアの表示</span>
-        <input type="checkbox" data-settings-target="showScore" class="toggle" data-action="change->settings#saveSettings">
       </div>
     </div>
   </div>
@@ -39,10 +35,6 @@
   <h2 class="text-lg font-bold text-white mb-2">24秒タイマー</h2>
   <div class="bg-white p-4 rounded-lg mb-4 shadow">
     <div class="space-y-2">
-      <div class="flex justify-between items-center border-b pb-1">
-        <span>24秒タイマーの表示</span>
-        <input type="checkbox" data-settings-target="show24Timer" class="toggle" data-action="change->settings#saveSettings">
-      </div>
       <div class="flex justify-between items-center">
         <span>メインタイマー開始時に同時開始</span>
         <input type="checkbox" data-settings-target="sync24Timer" class="toggle" data-action="change->settings#saveSettings">
