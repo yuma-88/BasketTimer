@@ -28,6 +28,14 @@ export default class extends Controller {
 
     // 音声設定をロード
     this.loadAudioSettings();
+
+    document.addEventListener("keydown", this.handleKeydown.bind(this));
+    document.addEventListener("keyup", this.handleKeyup.bind(this));
+  }
+
+  disconnect() {
+    document.removeEventListener("keydown", this.handleKeydown.bind(this));
+    document.removeEventListener("keyup", this.handleKeyup.bind(this));
   }
 
   // 音声設定をロード
@@ -55,6 +63,18 @@ export default class extends Controller {
   disableCountdownVoice() {
     // カウントダウン音声だけを無効にする
     this.countdownSounds = {};
+  }
+
+  handleKeydown(event) {
+    if (event.key === " ") {
+      this.playBuzzerSound(); // Bキーが押されたらブザー音を鳴らす
+    }
+  }
+
+  handleKeyup(event) {
+    if (event.key === " ") {
+      this.stopBuzzerSound(); // Bキーが離されたらブザー音を停止
+    }
   }
 
   // 音声を再生するメソッド（音声設定が有効な場合のみ）

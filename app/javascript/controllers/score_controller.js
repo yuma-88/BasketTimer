@@ -6,6 +6,22 @@ export default class extends Controller {
   connect() {
     this.teamAScoreValue = parseInt(this.teamAScoreTarget.textContent) || 0
     this.teamBScoreValue = parseInt(this.teamBScoreTarget.textContent) || 0
+    document.addEventListener("keydown", this.handleKeydown.bind(this));
+  }
+
+  disconnect() {
+    document.removeEventListener("keydown", this.handleKeydown.bind(this)); // キーボードイベントのリスナーを削除
+  }
+
+  // キーボードのキーを監視
+  handleKeydown(event) {
+    if (event.key === "s" || event.key === "S") {
+      this.resetScores();
+    }
+
+    if (event.key === "c" || event.key === "C") {
+      this.swapScores();
+    }
   }
 
   increaseTeamAScore() {
