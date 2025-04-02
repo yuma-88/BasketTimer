@@ -16,11 +16,15 @@ export default class extends Controller {
 
     // <select>の変更イベントを追加
     this.selectTarget.addEventListener("change", (event) => this.handleSelectChange(event));
+
+    // キーボードのイベントをリッスン（Enterキーやスペースキーでスタート/ストップ）
+    document.addEventListener("keydown", this.handleKeydown.bind(this));
   }
 
   disconnect() {
     // イベントリスナーを削除
     window.removeEventListener("settings:updated", () => this.loadSettings());
+    document.removeEventListener("keydown", this.handleKeydown.bind(this)); // キーボードイベントのリスナーを削除
   }
 
   loadSettings() {
@@ -114,6 +118,54 @@ export default class extends Controller {
     this.playClickSound();
   }
 
+  // キーボードのキーを監視
+  handleKeydown(event) {
+    if (this.endless && ['1', '2', '3', '4', '5', '6', 'h', 'H', 'i', 'I'].includes(event.key)) {
+      event.preventDefault(); // デフォルトの動作を無効にする
+      return; // それ以上の処理をしない
+    }
+
+    // エンターキー (Enter) または スペースキー (Space) が押されたとき
+    if (event.key === "Enter") {
+      this.toggleTimer(); // タイマーのスタート/ストップを切り替え
+    }
+
+    // Rキーが押されたときにresetAllを呼び出す
+    if (event.key === "r" || event.key === "R") {
+      this.resetAll(); // resetAllメソッドを呼び出す
+    }
+
+    if (event.key === "1") {
+      this.selectTarget.value = "P1";
+      this.resetTime();
+    }
+
+    if (event.key === "2") {
+      this.selectTarget.value = "P2";
+      this.resetTime();
+    }
+
+    if (event.key === "3") {
+      this.selectTarget.value = "P3";
+      this.resetTime();
+    }
+
+    if (event.key === "4") {
+      this.selectTarget.value = "P4";
+      this.resetTime();
+    }
+
+    if (event.key === "5" || event.key === "h" || event.key === "H") {
+      this.selectTarget.value = "ハーフ";
+      this.resetTime();
+    }
+
+    if (event.key === "6" || event.key === "i" || event.key === "I") {
+      this.selectTarget.value = "インターバル";
+      this.resetTime();
+    }
+  }
+
   toggleTimer() {
     if (this.runningValue) {
       this.stop();
@@ -137,10 +189,32 @@ export default class extends Controller {
 
   resetTime() {
     if (!this.isResetAll) {
-      this.playClickSound(); // タイマーリセット時に音を鳴らす
+        this.playClickSound(); // タイマーリセット時に音を鳴らす
     }
-    this.stop();
-    this.loadSettings(); // 設定から再読み込み
+    this.stop(); // タイマーを停止
+
+    // 現在選択されているモードに応じた時間にリセット
+    const selectedOption = this.selectTarget.value;
+
+    if (selectedOption === "インターバル") {
+        // インターバル時間にリセット
+        const [breakMinutes, breakSeconds] = this.breakTime.split(":").map(Number);
+        this.minutesValue = breakMinutes;
+        this.secondsValue = breakSeconds;
+    } else if (selectedOption === "ハーフ") {
+        // ハーフタイム時間にリセット
+        const [halfMinutes, halfSeconds] = this.halfTime.split(":").map(Number);
+        this.minutesValue = halfMinutes;
+        this.secondsValue = halfSeconds;
+    } else if (selectedOption === "P1" || selectedOption === "P2" || selectedOption === "P3" || selectedOption === "P4") {
+        // ピリオド時間（メインタイマー）にリセット
+        const [periodMinutes, periodSeconds] = this.mainTime.split(":").map(Number);
+        this.minutesValue = periodMinutes;
+        this.secondsValue = periodSeconds;
+    }
+
+    // 設定を再読み込み
+    this.updateDisplay();
   }
 
   countdown() {
@@ -340,7 +414,6 @@ export default class extends Controller {
       scoreController.resetScores();
     }
 
-    this.selectTarget.value = "P1";
     this.isResetAll = false; // 処理が終わったらフラグを戻す
   }  
 }
