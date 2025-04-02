@@ -20,11 +20,10 @@ export default class extends Controller {
     this.mainTimeTarget.textContent = savedSettings.mainTime || "10:00";
     this.breakTimeTarget.textContent = savedSettings.breakTime || "1:00";
     this.halfTimeTarget.textContent = savedSettings.halfTime || "10:00";
+    this.endlessTarget.checked = savedSettings.endless ?? false;
 
-    this.endlessTarget.checked = savedSettings.endless || false;
-    this.showScoreTarget.checked = savedSettings.showScore || false;
-    this.show24TimerTarget.checked = savedSettings.show24Timer || false;
     this.sync24TimerTarget.checked = savedSettings.sync24Timer || false;
+
     this.enableAudioTarget.checked = savedSettings.enableAudio ?? true;
     this.countdownVoiceTarget.checked = savedSettings.countdownVoice ?? true;
     this.memberChangeVoiceTarget.checked = savedSettings.memberChangeVoice ?? false;

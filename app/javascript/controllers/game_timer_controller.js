@@ -36,19 +36,26 @@ export default class extends Controller {
     this.minutesValue = minutes;
     this.secondsValue = seconds;
     
-    // インターバルやハーフタイムの時間も保持
+    this.mainTime = mainTime;
     this.breakTime = breakTime;
     this.halfTime = halfTime;
-    
-    // P1, P2, P3, P4の時間設定（ここに仮の時間を設定）
-    this.periodTime = savedSettings.mainTime || "10:00";
 
-    this.mainTime = mainTime;
+    this.endless = savedSettings.endless || false;
+    // endless モードがオンの場合、select を無効化
+    this.toggleSelectAvailability();
 
     // 音声設定の読み込み
     this.memberChangeVoice = savedSettings.memberChangeVoice ?? false;
 
     this.updateDisplay();
+  }
+
+  toggleSelectAvailability() {
+    if (this.endless) {
+      this.selectTarget.disabled = true; // endless がオンなら select を無効化
+    } else {
+      this.selectTarget.disabled = false; // endless がオフなら select を有効化
+    }
   }
 
   handleMemberChange() {
@@ -98,7 +105,7 @@ export default class extends Controller {
       this.secondsValue = halfSeconds;
     } else if (selectedOption === "P1", "P2", "P3", "P4") {
       // ピリオド時間を設定
-      const [periodMinutes, periodSeconds] = this.periodTime.split(":").map(Number);
+      const [periodMinutes, periodSeconds] = this.mainTime.split(":").map(Number);
       this.minutesValue = periodMinutes;
       this.secondsValue = periodSeconds;
     }
@@ -139,8 +146,13 @@ export default class extends Controller {
   countdown() {
     // 秒数が0になったらタイマーを止め、終了音を鳴らす
     if (this.minutesValue === 0 && this.secondsValue <= 0) {
-      this.stop();
-      this.playEndSound();
+      this.stop();  // タイマーを停止
+      this.playEndSound();  // 終了音を鳴らす
+    
+      if (this.endless) {
+        // endlessがオンの場合、インターバルタイマーを開始
+        this.startIntervalTimer();
+      }
       return;
     }
   
@@ -167,21 +179,63 @@ export default class extends Controller {
   
     // インターバルやハーフタイムの場合、カウントダウン音声を再生しない
     if (this.preventCountdownSound) return;
+
+    // メンバーチェンジの処理を呼び出す
+    this.handleMemberChange();
   
     // 1分00秒で音声を再生
     if (this.minutesValue === 1 && this.secondsValue <= 0.1) {
       this.playCountdownSound(60);
     }
   
-    // メンバーチェンジの処理を呼び出す
-    this.handleMemberChange();
-  
     // 1秒間隔でカウントダウン音声を再生
     if ([30, 15, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].includes(Math.floor(this.secondsValue)) && this.minutesValue === 0) {
       this.playCountdownSound(Math.floor(this.secondsValue));
     }
   }
+
+  // インターバルタイマー開始
+  startIntervalTimer() {
+    if (this.isIntervalRunning) return; // すでにインターバルが動いている場合、処理を中断
   
+    this.isIntervalRunning = true; // インターバルが実行中であることを示す
+    this.preventCountdownSound = true;
+  
+    // インターバルタイマーの開始
+    const [breakMinutes, breakSeconds] = this.breakTime.split(":").map(Number);
+    this.minutesValue = breakMinutes;
+    this.secondsValue = breakSeconds;
+  
+    // インターバルのカウントダウンを開始
+    setInterval(() => {
+      if (this.minutesValue === 0 && this.secondsValue <= 0) {
+        // インターバル終了時に自動的にゲーム時間に戻す
+        this.resetToGame();
+      }
+    }, 1000);  // 1秒ごとに確認
+  
+    // インターバルタイマーを開始
+    setTimeout(() => {
+      this.selectTarget.value = "インターバル";  // selectをインターバルに変更
+      this.start(); // インターバルタイマーを開始
+    }, 3000); // インターバル開始時に3秒の遅延
+  }
+  
+  // 試合時間に戻す処理
+  resetToGame() {
+    this.isIntervalRunning = false; // インターバルが終了したことを示す
+
+    // P1の試合時間に戻す処理
+    const [gameMinutes, gameSeconds] = this.mainTime.split(":").map(Number);
+    this.minutesValue = gameMinutes;
+    this.secondsValue = gameSeconds;
+    setTimeout(() => {
+      this.selectTarget.value = "P1"; // P1に戻す
+      this.updateDisplay();
+      this.stop();
+    }, 1000);
+  }
+
   updateDisplay() {
     // 秒数を整数に切り捨て
     const secondsInt = Math.floor(this.secondsValue);
@@ -286,6 +340,7 @@ export default class extends Controller {
       scoreController.resetScores();
     }
 
+    this.selectTarget.value = "P1";
     this.isResetAll = false; // 処理が終わったらフラグを戻す
   }  
 }
