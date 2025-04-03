@@ -24,7 +24,7 @@ export default class extends Controller {
     } else {
       this.start();
     }
-    this.playClickSound();
+    this.playSwichSound();
   }
 
   start() {
@@ -63,7 +63,7 @@ export default class extends Controller {
       this.updateDisplay(); // 画面に表示
       this.start(); // 再開
     }
-    this.playClickSound();
+    this.playSwichSound();
   }
 
   setFourteen() {
@@ -75,7 +75,7 @@ export default class extends Controller {
       this.updateDisplay();
       this.start();
     }
-    this.playClickSound();
+    this.playSwichSound();
   }
 
   setTimeout() {
@@ -83,27 +83,27 @@ export default class extends Controller {
     this.secondsValue = 60; // 60秒に変更
     this.updateDisplay();
     this.start();
-    this.playClickSound();
+    this.playSwichSound();
   }
 
   increase() {
     this.secondsValue++;
     this.updateDisplay();
-    this.playClickSound();
+    this.playSwichSound();
   }
 
   decrease() {
     if (this.secondsValue > 0) {
       this.secondsValue--;
       this.updateDisplay();
-      this.playClickSound();
+      this.playSwichSound();
     }
   }
 
-  playClickSound() {
+  playSwichSound() {
     const audioController = this.application.controllers.find(controller => controller.identifier === 'audio');
     if (audioController) {
-      audioController.playClickSound();
+      audioController.playSwichSound();
     }
   }
 
