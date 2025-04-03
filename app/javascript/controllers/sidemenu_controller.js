@@ -21,13 +21,13 @@ export default class extends Controller {
   toggle() {
     this.menuTarget.classList.toggle("hidden");
     this.menuTarget.classList.toggle("-translate-x-full");
-    this.playClickSound();
+    this.playSwichSound();
   }
 
-  playClickSound() {
+  playSwichSound() {
     const gameTimerController = this.application.controllers.find(controller => controller.identifier === 'game_timer');
     if (gameTimerController) {
-      gameTimerController.playClickSound();
+      gameTimerController.playSwichSound();
     }
   }
 }
