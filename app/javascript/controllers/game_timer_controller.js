@@ -115,7 +115,7 @@ export default class extends Controller {
     }
     
     this.updateDisplay();
-    this.playClickSound();
+    this.playSwichSound();
   }
 
   // キーボードのキーを監視
@@ -172,7 +172,7 @@ export default class extends Controller {
     } else {
       this.start();
     }
-    this.playClickSound();
+    this.playSwichSound();
   }
 
   start() {
@@ -189,7 +189,7 @@ export default class extends Controller {
 
   resetTime() {
     if (!this.isResetAll) {
-        this.playClickSound(); // タイマーリセット時に音を鳴らす
+        this.playSwichSound(); // タイマーリセット時に音を鳴らす
     }
     this.stop(); // タイマーを停止
 
@@ -329,14 +329,14 @@ export default class extends Controller {
   increaseMinute() {
     this.minutesValue += 1;
     this.updateDisplay();
-    this.playClickSound();
+    this.playSwichSound();
   }
 
   decreaseMinute() {
     if (this.minutesValue > 0) {
       this.minutesValue -= 1;
       this.updateDisplay();
-      this.playClickSound();
+      this.playSwichSound();
     }
   }
 
@@ -348,7 +348,7 @@ export default class extends Controller {
       this.secondsValue = 0;
     }
     this.updateDisplay();
-    this.playClickSound();
+    this.playSwichSound();
   }
 
   decreaseSecond() {
@@ -359,13 +359,13 @@ export default class extends Controller {
       this.secondsValue = 59;
     }
     this.updateDisplay();
-    this.playClickSound();
+    this.playSwichSound();
   }
 
-  playClickSound() {
+  playSwichSound() {
     const audioController = this.application.controllers.find(controller => controller.identifier === 'audio');
     if (audioController) {
-      audioController.playClickSound();
+      audioController.playSwichSound();
     }
   }
 

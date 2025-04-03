@@ -77,6 +77,14 @@ export default class extends Controller {
     }
   }
 
+  playSwichSound() {
+    if (this.endSound) { // 音声設定が有効な場合のみ再生
+      const swichSound = new Audio("/sounds/swich.mp3");
+      swichSound.volume = 0.1;
+      swichSound.play();
+    }
+  }
+
   // 音声を再生するメソッド（音声設定が有効な場合のみ）
   playClickSound() {
     if (this.endSound) { // 音声設定が有効な場合のみ再生
