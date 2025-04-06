@@ -47,11 +47,6 @@ export default class extends Controller {
 
   // チーム選択状態を強調表示
   updateSelection() {
-    // DOMが確実に存在するか確認
-    if (!this.teamAScoreTarget || !this.teamBScoreTarget) {
-      return;
-    }
-
     // Tailwindで条件付きクラスの切り替え
     if (this.selectedTeamValue === "A") {
       // チームAを強調表示（文字色変更）
