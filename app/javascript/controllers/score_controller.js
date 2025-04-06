@@ -56,10 +56,11 @@ export default class extends Controller {
       // チームBを強調表示（文字色変更）
       this.teamBScoreTarget.classList.add("text-yellow-200");
       this.teamAScoreTarget.classList.remove("text-yellow-200");
-
-      // 明示的にDOMの再描画を強制
-      this.element.classList.toggle('force-repaint');
     }
+
+    // 明示的にDOMの再描画を強制
+    this.teamAScoreTarget.offsetHeight; // レイアウトの再計算を強制
+    this.teamBScoreTarget.offsetHeight; // レイアウトの再計算を強制
   }
 
   increaseTeamAScore() {
