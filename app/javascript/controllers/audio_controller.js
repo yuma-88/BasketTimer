@@ -14,16 +14,16 @@ export default class extends Controller {
       60: new Audio("/sounds/countdown_60.mp3"),
       30: new Audio("/sounds/countdown_30.mp3"),
       15: new Audio("/sounds/countdown_15.mp3"),
-      9: new Audio("/sounds/countdown_10.mp3"),
-      8: new Audio("/sounds/countdown_9.mp3"),
-      7: new Audio("/sounds/countdown_8.mp3"),
-      6: new Audio("/sounds/countdown_7.mp3"),
-      5: new Audio("/sounds/countdown_6.mp3"),
-      4: new Audio("/sounds/countdown_5.mp3"),
-      3: new Audio("/sounds/countdown_4.mp3"),
-      2: new Audio("/sounds/countdown_3.mp3"),
-      1: new Audio("/sounds/countdown_2.mp3"),
-      0: new Audio("/sounds/countdown_1.mp3"),
+      10: new Audio("/sounds/countdown_10.mp3"),
+      9: new Audio("/sounds/countdown_9.mp3"),
+      8: new Audio("/sounds/countdown_8.mp3"),
+      7: new Audio("/sounds/countdown_7.mp3"),
+      6: new Audio("/sounds/countdown_6.mp3"),
+      5: new Audio("/sounds/countdown_5.mp3"),
+      4: new Audio("/sounds/countdown_4.mp3"),
+      3: new Audio("/sounds/countdown_3.mp3"),
+      2: new Audio("/sounds/countdown_2.mp3"),
+      1: new Audio("/sounds/countdown_1.mp3"),
     };
 
     // 音声設定をロード
@@ -80,7 +80,7 @@ export default class extends Controller {
   playSwichSound() {
     if (this.endSound) { // 音声設定が有効な場合のみ再生
       const swichSound = new Audio("/sounds/swich.mp3");
-      swichSound.volume = 0.1;
+      swichSound.volume = 0.3;
       swichSound.play();
     }
   }
