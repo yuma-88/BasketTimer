@@ -61,34 +61,6 @@ export default class extends Controller {
       this.selectTarget.disabled = false; // endless がオフなら select を有効化
     }
   }
-
-  handleMemberChange() {
-    // メインタイマー（mainTime）を基に試合の半分の時間を計算
-    const [mainMinutes, mainSeconds] = this.mainTime.split(":").map(Number);  // メインタイマーの分と秒を取得
-    const mainTimeInSeconds = (mainMinutes * 60) + mainSeconds; // メインタイムの総秒数
-    const halfTimeInSeconds = mainTimeInSeconds / 2; // 試合時間の半分（秒単位）
-  
-    // 現在の時間を秒単位で計算
-    const currentTimeInSeconds = this.minutesValue * 60 + this.secondsValue;
-  
-    // メンバーチェンジ音声が有効で、試合時間の半分に達した場合
-    if (this.memberChangeVoice && currentTimeInSeconds === halfTimeInSeconds) {
-      this.stop(); // タイマーを止める
-      
-      // 1回目のブザー音を鳴らす
-      this.playMemberChangeBuzzerSound();
-  
-      // 1秒後に2回目のブザー音を鳴らす
-      setTimeout(() => {
-        this.playMemberChangeBuzzerSound();
-  
-        // 2回目のブザー音の後にメンバーチェンジ音を鳴らす
-        setTimeout(() => {
-          this.playMemberChangeSound(); // メンバーチェンジ音を鳴らす
-        }, 1000); // 1秒後にメンバーチェンジ音を鳴らす
-      }, 1000); // 1秒後に2回目のブザー音を鳴らす
-    }
-  }
   
   handleSelectChange(event) {
     const selectedOption = event.target.value;
@@ -224,9 +196,21 @@ export default class extends Controller {
       this.playEndSound();  // 終了音を鳴らす
     
       if (this.endless) {
-        // endlessがオンの場合、インターバルタイマーを開始
-        this.startIntervalTimer();
+        const selectedOption = this.selectTarget.value;
+  
+        // endlessモードがオンの場合、選択されているタイマーによって次に進むタイマーを設定
+        if (selectedOption === "P1") {
+          // 現在「試合時間」の場合、インターバルタイマーに切り替える
+          this.startIntervalTimer();
+        } else if (selectedOption === "インターバル") {
+          // 現在「インターバル」の場合、試合時間（P1）に戻す
+          this.resetToGame();
+        }
       }
+
+      // タイマーが終了したのでメンバーチェンジのフラグをリセット
+      this.hasPlayedMemberChange = false; // フラグをリセット
+
       return;
     }
   
@@ -262,52 +246,82 @@ export default class extends Controller {
       this.playCountdownSound(60);
     }
   
-    // 1秒間隔でカウントダウン音声を再生
-    if ([30, 15, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].includes(Math.floor(this.secondsValue)) && this.minutesValue === 0) {
-      this.playCountdownSound(Math.floor(this.secondsValue));
+    // 音声カウントダウンの処理
+    this.handleCountdownSound();
+  }
+
+  handleCountdownSound() {
+    // 1分00秒で音声を再生
+    if (this.minutesValue === 1 && this.secondsValue <= 0.1) {
+      this.playCountdownSound(60);
+    }
+  
+    // 0.0秒で音声を再生（30, 15, 10秒などの時）
+    const secondsRemaining = this.secondsValue.toFixed(1); // 0.1単位に丸める
+
+    if (this.minutesValue === 0 && (secondsRemaining === "30.0" 
+        || secondsRemaining === "15.0" 
+        || secondsRemaining === "10.0" 
+        || secondsRemaining === "9.0" 
+        || secondsRemaining === "8.0" 
+        || secondsRemaining === "7.0" 
+        || secondsRemaining === "6.0" 
+        || secondsRemaining === "5.0" 
+        || secondsRemaining === "4.0" 
+        || secondsRemaining === "3.0" 
+        || secondsRemaining === "2.0" 
+        || secondsRemaining === "1.0")) {
+      this.playCountdownSound(Number(secondsRemaining));  // 0.0秒、10.0秒、15.0秒、30.0秒で再生
+    }
+  }
+
+  handleMemberChange() {
+    // メインタイマー（mainTime）を基に試合の半分の時間を計算
+    const [mainMinutes, mainSeconds] = this.mainTime.split(":").map(Number);  // メインタイマーの分と秒を取得
+    const mainTimeInSeconds = (mainMinutes * 60) + mainSeconds; // メインタイムの総秒数
+    const halfTimeInSeconds = mainTimeInSeconds / 2; // 試合時間の半分（秒単位）
+  
+    // 現在の時間を秒単位で計算
+    const currentTimeInSeconds = this.minutesValue * 60 + this.secondsValue;
+  
+    // 既にメンバーチェンジが実行されたかどうかを判断するフラグ
+    if (this.memberChangeVoice && Math.abs(currentTimeInSeconds - halfTimeInSeconds) <= 1 && !this.hasPlayedMemberChange) {
+      this.hasPlayedMemberChange = true; // メンバーチェンジ処理が実行されたことを記録
+
+      this.stop(); // タイマーを止める
+      
+      // 1回目のブザー音を鳴らす
+      this.playMemberChangeBuzzerSound();
+  
+      // 1秒後に2回目のブザー音を鳴らす
+      setTimeout(() => {
+        this.playMemberChangeBuzzerSound();
+  
+        // 2回目のブザー音の後にメンバーチェンジ音を鳴らす
+        setTimeout(() => {
+          this.playMemberChangeSound(); // メンバーチェンジ音を鳴らす
+        }, 1000); // 1秒後にメンバーチェンジ音を鳴らす
+      }, 1300); // 1秒後に2回目のブザー音を鳴らす
     }
   }
 
   // インターバルタイマー開始
   startIntervalTimer() {
-    if (this.isIntervalRunning) return; // すでにインターバルが動いている場合、処理を中断
-  
-    this.isIntervalRunning = true; // インターバルが実行中であることを示す
-    this.preventCountdownSound = true;
-  
-    // インターバルタイマーの開始
-    const [breakMinutes, breakSeconds] = this.breakTime.split(":").map(Number);
-    this.minutesValue = breakMinutes;
-    this.secondsValue = breakSeconds;
-  
-    // インターバルのカウントダウンを開始
-    setInterval(() => {
-      if (this.minutesValue === 0 && this.secondsValue <= 0) {
-        // インターバル終了時に自動的にゲーム時間に戻す
-        this.resetToGame();
-      }
-    }, 1000);  // 1秒ごとに確認
-  
-    // インターバルタイマーを開始
     setTimeout(() => {
-      this.selectTarget.value = "インターバル";  // selectをインターバルに変更
-      this.start(); // インターバルタイマーを開始
-    }, 3000); // インターバル開始時に3秒の遅延
+      this.selectTarget.value = "インターバル";
+      this.preventCountdownSound = true;
+      this.resetTime();
+      this.start();
+    }, 2000);
   }
   
   // 試合時間に戻す処理
   resetToGame() {
-    this.isIntervalRunning = false; // インターバルが終了したことを示す
-
-    // P1の試合時間に戻す処理
-    const [gameMinutes, gameSeconds] = this.mainTime.split(":").map(Number);
-    this.minutesValue = gameMinutes;
-    this.secondsValue = gameSeconds;
     setTimeout(() => {
-      this.selectTarget.value = "P1"; // P1に戻す
-      this.updateDisplay();
-      this.stop();
-    }, 1000);
+      this.preventCountdownSound = false;
+      this.selectTarget.value = "P1";  // P1の時間に戻す
+      this.resetTime();  // P1の時間にリセット
+    }, 2000);
   }
 
   updateDisplay() {
@@ -400,6 +414,7 @@ export default class extends Controller {
   resetAll() {
     this.isResetAll = true; // resetAllのフラグを立てる
     // 試合時間のリセット
+    this.selectTarget.value = "P1";  // P1の時間に戻す
     this.resetTime();
   
     // ショットクロックのリセット
@@ -414,6 +429,8 @@ export default class extends Controller {
       scoreController.resetScores();
     }
 
+    this.hasPlayedMemberChange = false; // フラグをリセット
+    this.preventCountdownSound = false;
     this.isResetAll = false; // 処理が終わったらフラグを戻す
-  }  
+  }
 }

@@ -11,6 +11,11 @@ export default class extends Controller {
   connect() {
     this.loadSettings();
     this.updateAudioSettings();  // 初期状態の音声設定を反映
+    document.addEventListener("keydown", this.handleKeydown.bind(this));
+  }
+
+  disconnect() {
+    document.removeEventListener("keydown", this.handleKeydown.bind(this));
   }
 
   // 設定を読み込む
@@ -56,7 +61,6 @@ export default class extends Controller {
       sessionStorage.setItem("gameSettings", JSON.stringify(settings));
     }
   }
-  
 
   // 設定を保存する
   saveSettings(event) {
@@ -74,6 +78,14 @@ export default class extends Controller {
     // 音声設定を更新
     if (settingName === "enableAudio") {
       this.updateAudioSettings();  // `enableAudio` が変更された場合は音声設定を再評価
+    }
+  }
+
+  // Bキーが押されたときに画面遷移する処理
+  handleKeydown(event) {
+    if (event.key === "b" || event.key === "B") {
+      const timersPath = document.getElementById('backButton').dataset.timersPath;
+      window.location = timersPath;
     }
   }
 

@@ -42,23 +42,25 @@ export default class extends Controller {
     } else {
       this.selectedTeamValue = "A";
     }
-    this.playSwichSound();
     this.updateSelection();
   }
 
   // チーム選択状態を強調表示
   updateSelection() {
+    if (!this.teamAScoreTarget || !this.teamBScoreTarget) {
+        return;
+    }
+
     // Tailwindで条件付きクラスの切り替え
     if (this.selectedTeamValue === "A") {
-      // チームAを強調表示（文字色変更）
-      this.teamAScoreTarget.classList.add("text-yellow-300");
-      this.teamBScoreTarget.classList.remove("text-yellow-300");
+        this.teamAScoreTarget.classList.add("!text-yellow-200"); // 強制的に適用
+        this.teamBScoreTarget.classList.remove("!text-yellow-200");
     } else {
-      // チームBを強調表示（文字色変更）
-      this.teamBScoreTarget.classList.add("text-yellow-300");
-      this.teamAScoreTarget.classList.remove("text-yellow-300");
+        this.teamBScoreTarget.classList.add("!text-yellow-200");
+        this.teamAScoreTarget.classList.remove("!text-yellow-200");
     }
   }
+
 
   increaseTeamAScore() {
     this.teamAScoreValue++
