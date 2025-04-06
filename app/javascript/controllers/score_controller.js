@@ -42,7 +42,6 @@ export default class extends Controller {
     } else {
       this.selectedTeamValue = "A";
     }
-    this.playSwichSound();
     this.updateSelection();
   }
 
@@ -51,12 +50,12 @@ export default class extends Controller {
     // Tailwindで条件付きクラスの切り替え
     if (this.selectedTeamValue === "A") {
       // チームAを強調表示（文字色変更）
-      this.teamAScoreTarget.classList.add("text-yellow-300");
-      this.teamBScoreTarget.classList.remove("text-yellow-300");
+      this.teamAScoreTarget.classList.add("text-yellow-200");
+      this.teamBScoreTarget.classList.remove("text-yellow-200");
     } else {
       // チームBを強調表示（文字色変更）
-      this.teamBScoreTarget.classList.add("text-yellow-300");
-      this.teamAScoreTarget.classList.remove("text-yellow-300");
+      this.teamBScoreTarget.classList.add("text-yellow-200");
+      this.teamAScoreTarget.classList.remove("text-yellow-200");
     }
   }
 
