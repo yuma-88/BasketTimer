@@ -37,6 +37,10 @@ export default class extends Controller {
       } else {
         this.stop();
         this.playEndSound();
+        const gameTimerController = this.application.controllers.find(controller => controller.identifier === 'game_timer');
+        if (gameTimerController) {
+          gameTimerController.stop();
+        }
       }
     }, 1000);
   }
