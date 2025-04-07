@@ -5,6 +5,8 @@ export default class extends Controller {
   static values = { selectedTeam: String }
 
   connect() {
+    this.loadSettings();
+    this.updateScoreColors(); // 初期状態でスコアの色を変更
     this.teamAScoreValue = parseInt(this.teamAScoreTarget.textContent) || 0
     this.teamBScoreValue = parseInt(this.teamBScoreTarget.textContent) || 0
     this.selectedTeamValue = "A"; // 初期選択はチームA
@@ -14,6 +16,14 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("keydown", this.handleKeydown.bind(this));
+  }
+
+  loadSettings() {
+    // sessionStorage から設定を読み込む
+    const savedSettings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
+
+    // teamIdenfication 設定を読み込み
+    this.teamIdentification = savedSettings.teamIdenfication ?? false;
   }
 
   // キーボード操作でチームを選択
@@ -48,19 +58,30 @@ export default class extends Controller {
   // チーム選択状態を強調表示
   updateSelection() {
     if (!this.teamAScoreTarget || !this.teamBScoreTarget) {
-        return;
+      return;
     }
 
     // Tailwindで条件付きクラスの切り替え
     if (this.selectedTeamValue === "A") {
-        this.teamAScoreTarget.classList.add("!text-yellow-200"); // 強制的に適用
-        this.teamBScoreTarget.classList.remove("!text-yellow-200");
+      this.teamAScoreTarget.classList.add("border-b-2", "border-red-800");
+      this.teamBScoreTarget.classList.remove("border-b-2", "border-red-800");
     } else {
-        this.teamBScoreTarget.classList.add("!text-yellow-200");
-        this.teamAScoreTarget.classList.remove("!text-yellow-200");
+      this.teamBScoreTarget.classList.add("border-b-2", "border-red-800");
+      this.teamAScoreTarget.classList.remove("border-b-2", "border-red-800");
     }
   }
 
+  updateScoreColors() {
+    if (!this.teamAScoreTarget || !this.teamBScoreTarget) {
+        return;
+    }
+
+    // teamIdentification がオンの場合、スコアAを白、スコアBを青に設定
+    if (this.teamIdentification) {
+      this.teamAScoreTarget.classList.add("!text-white");
+      this.teamBScoreTarget.classList.add("!text-blue-500");
+    }
+  }
 
   increaseTeamAScore() {
     this.teamAScoreValue++
@@ -127,6 +148,25 @@ export default class extends Controller {
 
     this.updateScore("teamAScore", this.teamAScoreValue);
     this.updateScore("teamBScore", this.teamBScoreValue);
+
+    // teamIdentification がオンの場合、色も交換
+    if (this.teamIdentification) {
+      // スコアAとスコアBの色を入れ替え
+      if (this.teamAScoreTarget.classList.contains("!text-blue-500")) {
+        // スコアAが青色であれば、スコアAを白に、スコアBを青色に
+        this.teamAScoreTarget.classList.remove("!text-blue-500");
+        this.teamAScoreTarget.classList.add("!text-white");
+        this.teamBScoreTarget.classList.remove("!text-white");
+        this.teamBScoreTarget.classList.add("!text-blue-500");
+      } else {
+        // それ以外（スコアAが白）なら逆にする
+        this.teamAScoreTarget.classList.remove("!text-white");
+        this.teamAScoreTarget.classList.add("!text-blue-500");
+        this.teamBScoreTarget.classList.remove("!text-blue-500");
+        this.teamBScoreTarget.classList.add("!text-white");
+      }
+    }
+
     this.playSwichSound();
   }
 

@@ -44,9 +44,11 @@ export default class extends Controller {
     this.breakTime = breakTime;
     this.halfTime = halfTime;
 
-    this.endless = savedSettings.endless || false;
+    this.endless = savedSettings.endless ?? false;
     // endless モードがオンの場合、select を無効化
     this.toggleSelectAvailability();
+
+    this.teamIdentification = savedSettings.teamIdenfication ?? false;
 
     // 音声設定の読み込み
     this.memberChangeVoice = savedSettings.memberChangeVoice ?? false;
@@ -337,6 +339,15 @@ export default class extends Controller {
       this.timeTarget.textContent = `${this.secondsValue.toFixed(1)}`;
     } else {
       this.timeTarget.textContent = `${minutesFormatted}:${secondsFormatted}`;
+    }
+
+    // teamIdentification の値に基づいてクラスを追加
+    if (this.teamIdentification) {
+      // チーム識別が有効なら、黄色のクラスを追加
+      this.timeTarget.classList.add("text-yellow-400");
+    } else {
+      // チーム識別が無効なら、白色のクラスを追加
+      this.timeTarget.classList.remove("text-yellow-400");
     }
   }
 

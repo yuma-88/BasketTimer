@@ -5,7 +5,7 @@ export default class extends Controller {
     "mainTime", "breakTime", "halfTime",
     "endless", "showMainTimer", "showScore",
     "show24Timer", "sync24Timer", "enableAudio",
-    "countdownVoice", "memberChangeVoice"
+    "countdownVoice", "memberChangeVoice", "teamIdenfication"
   ];
 
   connect() {
@@ -29,9 +29,30 @@ export default class extends Controller {
 
     this.sync24TimerTarget.checked = savedSettings.sync24Timer || false;
 
+    this.teamIdenficationTarget.checked = savedSettings.teamIdenfication ?? false;
+
     this.enableAudioTarget.checked = savedSettings.enableAudio ?? true;
     this.countdownVoiceTarget.checked = savedSettings.countdownVoice ?? true;
     this.memberChangeVoiceTarget.checked = savedSettings.memberChangeVoice ?? false;
+  }
+
+  // 設定を保存する
+  saveSettings(event) {
+    const target = event.target;
+    const settingName = target.dataset.settingsTarget;
+    const settingValue = target.checked;
+
+    const settings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
+    settings[settingName] = settingValue;
+    sessionStorage.setItem("gameSettings", JSON.stringify(settings));
+
+    // 設定更新イベントを発火
+    window.dispatchEvent(new Event("settings:updated"));
+
+    // 音声設定を更新
+    if (settingName === "enableAudio") {
+      this.updateAudioSettings();  // `enableAudio` が変更された場合は音声設定を再評価
+    }
   }
 
   // 音声設定を更新する
@@ -62,28 +83,10 @@ export default class extends Controller {
     }
   }
 
-  // 設定を保存する
-  saveSettings(event) {
-    const target = event.target;
-    const settingName = target.dataset.settingsTarget;
-    const settingValue = target.checked;
-
-    const settings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
-    settings[settingName] = settingValue;
-    sessionStorage.setItem("gameSettings", JSON.stringify(settings));
-
-    // 設定更新イベントを発火
-    window.dispatchEvent(new Event("settings:updated"));
-
-    // 音声設定を更新
-    if (settingName === "enableAudio") {
-      this.updateAudioSettings();  // `enableAudio` が変更された場合は音声設定を再評価
-    }
-  }
-
   // Bキーが押されたときに画面遷移する処理
   handleKeydown(event) {
     if (event.key === "b" || event.key === "B") {
+      this.playSwichSound();
       const timersPath = document.getElementById('backButton').dataset.timersPath;
       window.location = timersPath;
     }
@@ -124,6 +127,14 @@ export default class extends Controller {
     if (event.key === "Enter") {
       event.preventDefault();
       event.target.blur(); // フォーカスを外して確定
+    }
+  }
+
+  // サウンド再生
+  playSwichSound() {
+    const audioController = this.application.controllers.find(controller => controller.identifier === 'audio');
+    if (audioController) {
+      audioController.playSwichSound();
     }
   }
 }
