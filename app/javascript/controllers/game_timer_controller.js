@@ -44,7 +44,7 @@ export default class extends Controller {
     this.breakTime = breakTime;
     this.halfTime = halfTime;
 
-    this.endless = savedSettings.endless || false;
+    this.endless = savedSettings.endless ?? false;
     // endless モードがオンの場合、select を無効化
     this.toggleSelectAvailability();
 
