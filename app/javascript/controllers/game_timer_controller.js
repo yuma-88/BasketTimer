@@ -43,10 +43,11 @@ export default class extends Controller {
     this.mainTime = mainTime;
     this.breakTime = breakTime;
     this.halfTime = halfTime;
-
     this.endless = savedSettings.endless ?? false;
     // endless モードがオンの場合、select を無効化
     this.toggleSelectAvailability();
+
+    this.sync24Timer = savedSettings.sync24Timer ?? false;
 
     this.teamIdentification = savedSettings.teamIdenfication ?? false;
 
@@ -81,7 +82,7 @@ export default class extends Controller {
       const [halfMinutes, halfSeconds] = this.halfTime.split(":").map(Number);
       this.minutesValue = halfMinutes;
       this.secondsValue = halfSeconds;
-    } else if (selectedOption === "P1", "P2", "P3", "P4") {
+    } else if (["P1", "P2", "P3", "P4"].includes(selectedOption)) {
       // ピリオド時間を設定
       const [periodMinutes, periodSeconds] = this.mainTime.split(":").map(Number);
       this.minutesValue = periodMinutes;
@@ -154,11 +155,47 @@ export default class extends Controller {
       this.runningValue = true;
       this.timer = setInterval(() => this.countdown(), 100); // 100ミリ秒でカウントダウン
     }
+  
+    // インターバルやハーフタイムが選ばれている場合、ショットクロックのタイマーはスタートしない
+    if (this.selectTarget.value === "インターバル" || this.selectTarget.value === "ハーフ") {
+      return;  // インターバルやハーフが選ばれている場合は、以下の処理をスキップ
+    }
+  
+    if (this.sync24Timer) {
+      const shotClockController = this.application.controllers.find(controller => controller.identifier === 'shot_clock');
+      
+      if (shotClockController) {
+        const shotClockTime = shotClockController.secondsValue; // ショットクロックの時間を取得
+  
+        // 試合時間がショットクロックを上回っている場合、両方のタイマーをスタート
+        if (this.minutesValue * 60 + this.secondsValue > shotClockTime) {
+          shotClockController.start();  // ショットクロックのタイマーをスタート
+        }
+      }
+    }
   }
+  
 
   stop() {
     this.runningValue = false;
     clearInterval(this.timer);
+
+    if (this.selectTarget.value === "インターバル" || this.selectTarget.value === "ハーフ") {
+      return;  // インターバルやハーフが選ばれている場合は、以下の処理をスキップ
+    }
+  
+    if (this.sync24Timer) {
+      const shotClockController = this.application.controllers.find(controller => controller.identifier === 'shot_clock');
+      
+      if (shotClockController) {
+        const shotClockTime = shotClockController.secondsValue; // ショットクロックの時間を取得
+  
+        // 試合時間がショットクロックを上回っている場合、両方のタイマーをスタート
+        if (this.minutesValue * 60 + this.secondsValue > shotClockTime) {
+          shotClockController.stop();  // ショットクロックのタイマーをスタート
+        }
+      }
+    }
   }
 
   resetTime() {
@@ -190,12 +227,40 @@ export default class extends Controller {
     // 設定を再読み込み
     this.updateDisplay();
   }
+  
+  resetAll() {
+    this.isResetAll = true; // resetAllのフラグを立てる
+    // 試合時間のリセット
+    this.selectTarget.value = "P1";  // P1の時間に戻す
+    this.resetTime();
+  
+    // ショットクロックのリセット
+    const shotClockController = this.application.controllers.find(controller => controller.identifier === 'shot_clock');
+    if (shotClockController) {
+      shotClockController.reset();
+    }
+  
+    // スコアのリセット
+    const scoreController = this.application.controllers.find(controller => controller.identifier === 'score');
+    if (scoreController) {
+      scoreController.resetScores();
+    }
+
+    this.hasPlayedMemberChange = false; // フラグをリセット
+    this.preventCountdownSound = false;
+    this.isResetAll = false; // 処理が終わったらフラグを戻す
+  }
 
   countdown() {
     // 秒数が0になったらタイマーを止め、終了音を鳴らす
     if (this.minutesValue === 0 && this.secondsValue <= 0) {
       this.stop();  // タイマーを停止
       this.playEndSound();  // 終了音を鳴らす
+
+      const shotClockController = this.application.controllers.find(controller => controller.identifier === 'shot_clock');
+      if (shotClockController) {
+        shotClockController.reset();
+      }
     
       if (this.endless) {
         const selectedOption = this.selectTarget.value;
@@ -420,28 +485,5 @@ export default class extends Controller {
     if (audioController) {
       audioController.playMemberChangeSound();
     }
-  }
-
-  resetAll() {
-    this.isResetAll = true; // resetAllのフラグを立てる
-    // 試合時間のリセット
-    this.selectTarget.value = "P1";  // P1の時間に戻す
-    this.resetTime();
-  
-    // ショットクロックのリセット
-    const shotClockController = this.application.controllers.find(controller => controller.identifier === 'shot_clock');
-    if (shotClockController) {
-      shotClockController.reset();
-    }
-  
-    // スコアのリセット
-    const scoreController = this.application.controllers.find(controller => controller.identifier === 'score');
-    if (scoreController) {
-      scoreController.resetScores();
-    }
-
-    this.hasPlayedMemberChange = false; // フラグをリセット
-    this.preventCountdownSound = false;
-    this.isResetAll = false; // 処理が終わったらフラグを戻す
   }
 }

@@ -27,7 +27,7 @@ export default class extends Controller {
     this.halfTimeTarget.textContent = savedSettings.halfTime || "10:00";
     this.endlessTarget.checked = savedSettings.endless ?? false;
 
-    this.sync24TimerTarget.checked = savedSettings.sync24Timer || false;
+    this.sync24TimerTarget.checked = savedSettings.sync24Timer ?? false;
 
     this.teamIdenficationTarget.checked = savedSettings.teamIdenfication ?? false;
 

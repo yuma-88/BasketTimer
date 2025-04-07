@@ -3,6 +3,7 @@
   <!-- 戻るボタン -->
   <button class="text-white text-2xl mb-4" id="backButton" 
         data-timers-path="<%= timers_path %>"
+        data-action="click->audio#playSwichSound"
         onclick="window.location=this.dataset.timersPath">
   ←
   </button>
@@ -38,7 +39,7 @@
   <div class="bg-white p-4 rounded-lg mb-4 shadow">
     <div class="space-y-2">
       <div class="flex justify-between items-center">
-        <span>メインタイマー開始時に同時開始</span>
+        <span>メインタイムの開始・停止と同期</span>
         <input type="checkbox" data-settings-target="sync24Timer" class="toggle" data-action="change->settings#saveSettings change->audio#playClickSound">
       </div>
     </div>
