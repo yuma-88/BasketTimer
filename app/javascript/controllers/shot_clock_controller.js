@@ -9,13 +9,13 @@ export default class extends Controller {
 
   connect() {
     this.runningValue = false;
-    this.secondsValue = 24; // 初期値を24秒に設定
+    this.secondsValue = 24.0; // 内部では小数点を扱う（初期値を24.0秒に設定）
     this.timer = null;
     this.updateDisplay();
   }
 
   updateDisplay() {
-    this.timeTarget.textContent = this.secondsValue; // 画面に秒数を表示
+    this.timeTarget.textContent = Math.floor(this.secondsValue); // 画面に秒数を整数として表示
   }
 
   toggleShotClock() {
@@ -32,7 +32,7 @@ export default class extends Controller {
     this.runningValue = true;
     this.timer = setInterval(() => {
       if (this.secondsValue > 0) {
-        this.secondsValue--;
+        this.secondsValue -= 0.1; // 0.1秒ずつ減少
         this.updateDisplay();
       } else {
         this.stop();
@@ -42,7 +42,7 @@ export default class extends Controller {
           gameTimerController.stop();
         }
       }
-    }, 1000);
+    }, 100); // 100msごとにカウントダウン（0.1秒ごと）
   }
 
   stop() {
@@ -52,18 +52,18 @@ export default class extends Controller {
 
   reset() {
     this.stop();
-    this.secondsValue = 24; // 初期状態に戻す（24秒）
+    this.secondsValue = 24.0; // 初期状態に戻す（24.0秒）
     this.updateDisplay();
   }
 
   setTwentyFour() {
     // ストップ状態の場合は、24秒に設定して停止
     if (!this.runningValue) {
-      this.secondsValue = 24; // 24秒に設定
+      this.secondsValue = 24.0; // 24.0秒に設定
       this.updateDisplay(); // 画面に表示
     } else {
       // 動作中の場合は、24秒に設定してすぐに再開
-      this.secondsValue = 24; // 24秒に設定
+      this.secondsValue = 24.0; // 24.0秒に設定
       this.updateDisplay(); // 画面に表示
       this.start(); // 再開
     }
@@ -72,10 +72,10 @@ export default class extends Controller {
 
   setFourteen() {
     if (!this.runningValue) {
-      this.secondsValue = 14;
+      this.secondsValue = 14.0;
       this.updateDisplay();
     } else {
-      this.secondsValue = 14;
+      this.secondsValue = 14.0;
       this.updateDisplay();
       this.start();
     }
@@ -84,21 +84,21 @@ export default class extends Controller {
 
   setTimeout() {
     this.stop();
-    this.secondsValue = 60; // 60秒に変更
+    this.secondsValue = 60.0; // 60秒に変更
     this.updateDisplay();
     this.start();
     this.playSwichSound();
   }
 
   increase() {
-    this.secondsValue++;
+    this.secondsValue += 1; // 0.1秒増加
     this.updateDisplay();
     this.playSwichSound();
   }
 
   decrease() {
     if (this.secondsValue > 0) {
-      this.secondsValue--;
+      this.secondsValue -= 1; // 0.1秒減少
       this.updateDisplay();
       this.playSwichSound();
     }
