@@ -110,6 +110,10 @@ export default class extends Controller {
       this.resetAll(); // resetAllメソッドを呼び出す
     }
 
+    if (event.key === "t" || event.key === "T") {
+      this.resetTime(); // resetAllメソッドを呼び出す
+    }
+
     if (event.key === "1") {
       this.selectTarget.value = "P1";
       this.resetTime();
