@@ -1,16 +1,49 @@
-<h2>Forgot your password?</h2>
+<% content_for :title, "パスワード再設定" %>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+<div class="w-full h-screen bg-zinc-700">
+  <!-- ヘッダー -->
+  <header class="bg-zinc-900 text-white py-4 border-b border-zinc-500">
+    <div class="w-full flex justify-between items-center px-6">
+      <h1 class="text-xl font-bold">パスワード再設定</h1>
+      <nav class="space-x-4">
+        <%= link_to "メニュー", menus_path, class: "hover:underline" %>
+        <% if user_signed_in? %>
+          <%= link_to "ログアウト", destroy_user_session_path, data: { "turbo-method": "delete", confirm: "ログアウトしますか？" }, class: "hover:underline text-red-400" %>
+        <% end %>
+      </nav>
+    </div>
+  </header>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  <!-- フラッシュメッセージ -->
+  <div class="py-2 px-4">
+    <% flash.each do |key, value| %>
+      <div class="mb-4 p-4 rounded shadow-md <%= key == 'notice' ? 'bg-green-500 text-white' : 'bg-red-500 text-white' %>">
+        <%= value %>
+      </div>
+    <% end %>
+
+    <!-- エラーメッセージ -->
+    <% if resource.errors.any? %>
+      <div class="bg-zinc-600 border border-orange-500 alert alert-danger p-4 mb-4 rounded">
+        <ul class="list-disc pl-5 text-red-400">
+          <% resource.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- フォーム -->
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+      <div class="mb-4">
+        <%= f.label :email, 'メールアドレス', class: 'block text-orange-500 font-semibold' %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'mt-1 block w-full px-3 py-2 border border-orange-500 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-zinc-800 text-white' %>
+      </div>
+
+      <div class="mb-4 flex gap-4">
+        <%= link_to '戻る', new_session_path(resource_name), class: "inline-block bg-zinc-600 text-white px-4 py-2 rounded hover:bg-zinc-800 transition border border-orange-500" %>
+        <%= f.submit "リクエストする", class: "inline-block bg-zinc-600 text-white px-4 py-2 rounded hover:bg-zinc-800 transition border border-orange-500" %>
+      </div>
+    <% end %>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
