@@ -1,18 +1,46 @@
 <% content_for :title, "試合詳細" %>
-<h1 class="text-3xl font-bold mb-6">試合詳細</h1>
 
-<div class="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
-  <p class="mb-4">
-    <strong class="text-lg">ホームチーム:</strong> <%= @game_record.home_team.name %><br>
-    <strong class="text-lg">アウェイチーム:</strong> <%= @game_record.away_team.name %><br>
-    <strong class="text-lg">試合タイプ:</strong> <%= @game_record.game_type %><br>
-    <strong class="text-lg">ホームチーム得点:</strong> <%= @game_record.score_home_team %><br>
-    <strong class="text-lg">アウェイチーム得点:</strong> <%= @game_record.score_away_team %><br>
-    <strong class="text-lg">日付:</strong> <%= @game_record.date.strftime("%Y-%m-%d") %><br>
-    <strong class="text-lg">概要:</strong> <%= @game_record.description.present? ? @game_record.description : "なし" %><br>
-  </p>
+<div class="w-full h-screen bg-zinc-800">
+  <header class="bg-zinc-900 text-white py-4 border-b border-zinc-500">
+    <div class="w-full flex justify-between items-center px-6">
+      <h1 class="text-xl font-bold">試合詳細</h1>
+      <nav class="space-x-4">
+        <%= link_to "メニュー", menus_path, class: "hover:underline" %>
+        <% if user_signed_in? %>
+          <%= link_to "ログアウト", destroy_user_session_path, data: { "turbo-method": "delete", confirm: "ログアウトしますか？" }, class: "hover:underline text-red-400" %>
+        <% end %>
+      </nav>
+    </div>
+  </header>
 
-  <div class="mt-6">
-    <%= link_to '戻る', game_records_path, class: "inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
-  </div>
+  <main class="p-4 py-8">
+    <div class="bg-zinc-700 p-6 rounded-lg border border-orange-500 shadow-md max-w-4xl mx-auto">
+      <div class="grid grid-cols-[200px_1fr] gap-y-3 text-white text-base">
+        <div class="text-orange-500 font-semibold">ホームチーム:</div>
+        <div class="text-lg font-bold"><%= @game_record.home_team.name %></div>
+
+        <div class="text-orange-500 font-semibold">アウェイチーム:</div>
+        <div class="text-lg font-bold"><%= @game_record.away_team.name %></div>
+
+        <div class="text-orange-500 font-semibold">試合タイプ:</div>
+        <div class="text-lg font-bold"><%= @game_record.game_type %></div>
+
+        <div class="text-orange-500 font-semibold">ホームチーム得点:</div>
+        <div class="text-lg font-bold"><%= @game_record.score_home_team %></div>
+
+        <div class="text-orange-500 font-semibold">アウェイチーム得点:</div>
+        <div class="text-lg font-bold"><%= @game_record.score_away_team %></div>
+
+        <div class="text-orange-500 font-semibold">日付:</div>
+        <div class="text-lg font-bold"><%= @game_record.date.strftime("%Y-%m-%d") %></div>
+
+        <div class="text-orange-500 font-semibold">概要:</div>
+        <div class="text-lg font-bold"><%= @game_record.description.present? ? @game_record.description : "なし" %></div>
+      </div>
+
+      <div class="mt-6">
+        <%= link_to '戻る', game_records_path, class: "inline-block bg-zinc-600 text-white px-4 py-2 rounded hover:bg-zinc-800 transition border border-orange-500" %>
+      </div>
+    </div>
+  </main>
 </div>

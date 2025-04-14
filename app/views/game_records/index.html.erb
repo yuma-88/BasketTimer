@@ -1,40 +1,67 @@
 <% content_for :title, "試合記録" %>
 
-<header class="bg-gray-800 text-white py-4">
-  <div class="container mx-auto flex justify-between items-center px-4">
-    <h1 class="text-xl font-bold">試合記録</h1>
-    <nav class="space-x-4">
-      <%= link_to "メニュー", menus_path, class: "hover:underline" %>
-      <% if user_signed_in? %>
-        <%= link_to "ログアウト", destroy_user_session_path, data: { "turbo-method": "delete", confirm: "ログアウトしますか？" }, class: "hover:underline text-red-400" %>
-      <% end %>
-    </nav>
-  </div>
-</header>
+<div class="w-full h-screen bg-zinc-800">
 
-<div class="mb-6">
-  <%= link_to '新規作成', new_game_record_path, class: 'inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-lg hover:bg-blue-700 transition duration-200' %>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  <% @game_records.each do |game_record| %>
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-200">
-      <%= link_to game_record_path(game_record) do %>
-        <div class="p-4">
-          <div class="text-lg font-semibold text-gray-800">
-            <%= game_record.home_team.name %> vs <%= game_record.away_team.name %>
-          </div>
-          <div class="text-sm text-gray-600 mt-2">
-            <p>日付: <%= game_record.date.strftime("%Y-%m-%d") %></p>
-            <p>試合タイプ: <%= game_record.game_type %></p>
-            <p>得点: <%= game_record.score_home_team %> - <%= game_record.score_away_team %></p>
-          </div>
-        </div>
-      <% end %>
-      <div class="bg-gray-100 p-3 text-center">
-        <%= link_to '編集', edit_game_record_path(game_record), class: 'text-yellow-500 hover:underline mr-2' %>
-        <%= link_to '削除', game_record_path(game_record), data: { turbo_method: :delete, confirm: '本当に削除しますか？' }, class: 'text-red-500 hover:underline' %>
-      </div>
+  <header class="bg-zinc-900 text-white py-4 border-b border-zinc-500">
+    <div class="w-full flex justify-between items-center px-6">
+      <h1 class="text-xl font-bold">試合記録</h1>
+      <nav class="space-x-4">
+        <%= link_to "メニュー", menus_path, class: "hover:underline" %>
+        <% if user_signed_in? %>
+          <%= link_to "ログアウト", destroy_user_session_path, data: { "turbo-method": "delete", confirm: "ログアウトしますか？" }, class: "hover:underline text-red-400" %>
+        <% end %>
+      </nav>
     </div>
-  <% end %>
+  </header>
+
+  <div class="py-2 px-4">
+    <% flash.each do |key, value| %>
+      <div class="mb-4 p-4 rounded shadow-md <%= key == 'notice' ? 'bg-green-500 text-white' : 'bg-red-500 text-white' %>">
+        <%= value %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="m-4">
+    <%= link_to '新規作成', new_game_record_path, class: "inline-block bg-zinc-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg hover:bg-zinc-800 transition duration-200 border border-orange-500" %>
+  </div>
+
+  <div class="mx-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @game_records.each do |game_record| %>
+      <div class="bg-zinc-700 shadow-lg rounded-lg overflow-hidden border border-orange-500 hover:shadow-xl transition-shadow duration-200">
+        <%= link_to game_record_path(game_record) do %>
+          <div class="p-4">
+            <div class="text-lg font-semibold text-white">
+              <%= game_record.home_team.name %> vs <%= game_record.away_team.name %>
+            </div>
+            <div class="text-base mt-2 space-y-1">
+              <div>
+                <span class="text-zinc-400">日付:</span>
+                <span class="text-white"><%= game_record.date.strftime("%Y-%m-%d") %></span>
+              </div>
+              <div>
+                <span class="text-zinc-400">試合タイプ:</span>
+                <span class="text-white"><%= game_record.game_type %></span>
+              </div>
+              <div>
+                <span class="text-zinc-400">得点:</span>
+                <span class="text-white"><%= game_record.score_home_team %> - <%= game_record.score_away_team %></span>
+              </div>
+            </div>
+
+          </div>
+        <% end %>
+        <div class="bg-zinc-600 p-3 text-center">
+          <%= link_to edit_game_record_path(game_record), class: 'text-orange-500 hover:text-orange-300 mr-5' do %>
+            <i class="fa-solid fa-pen"></i>
+          <% end %>
+          <%= link_to game_record_path(game_record), 
+            data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか？' }, 
+            class: 'text-red-500 hover:text-red-300' do %>
+            <i class="fa-solid fa-trash"></i>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>

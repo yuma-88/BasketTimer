@@ -9,6 +9,7 @@ ja:
         username: ユーザー名
         password: パスワード
         password_confirmation: パスワード確認
+        reset_password_token: パスワード変更
       game_record:
         date: 日付
         home_team_name: ホームチーム

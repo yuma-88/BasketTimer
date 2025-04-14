@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get "timers/show"
-  devise_for :users
+  devise_for :users, controllers: { registrations: "registrations", passwords: "passwords" }
   resources :game_records, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -21,4 +21,6 @@ Rails.application.routes.draw do
   get "/game_records", to: "game_records#index"
   get "/rulegpts", to: "rulegpts#index"
   get "/settings", to: "settings#index"
+
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 end
