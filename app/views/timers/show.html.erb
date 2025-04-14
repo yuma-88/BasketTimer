@@ -19,16 +19,23 @@
   </div>
 
   <!-- サイドメニュー -->
-  <div data-sidemenu-target="menu" class="fixed left-0 top-0 h-full w-48 bg-zinc-700 text-white py-4 px-6 transform -translate-x-full hidden transition-transform duration-300 ease-in-out z-20">
-    <ul class="flex flex-col gap-4 text-lg">
-      <button data-action="click->sidemenu#toggle">閉じる</button>
-      <button data-action="click->game_timer#resetTime">タイマーリセット</button>
-      <button data-action="click->score#resetScores">スコアリセット</button>
-      <button onclick="window.location='<%= settings_path %>'" data-action="click->audio#playSwichSound">設定</button>
-      <button onclick="window.location='<%= new_user_session_path %>'" data-action="click->audio#playSwichSound">試合記録</button>
-      <button>確認用GPT</button>
-      <button onclick="window.location='<%= menus_path %>'">トップメニュー</button>
+  <div data-sidemenu-target="menu" class="fixed left-0 top-0 h-full w-48 bg-zinc-700 text-white py-4 px-6 transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+    <ul class="flex flex-col gap-4 text-lg text-left"> <!-- text-left を追加 -->
+      <li><button data-action="click->game_timer#resetTime">タイマーリセット</button></li>
+      <li><button data-action="click->score#resetScores">スコアリセット</button></li>
+      <li><button onclick="window.location='<%= settings_path %>'" data-action="click->audio#playSwichSound">設定</button></li>
+      <li><button onclick="window.location='<%= new_user_session_path %>'" data-action="click->audio#playSwichSound">試合記録</button></li>
+      <li><button>確認用GPT</button></li>
+      <li><button onclick="window.location='<%= menus_path %>'">トップメニュー</button></li>
+      <li><button data-action="click->sidemenu#toggle">閉じる</button></li>
     </ul>
+  </div>
+
+
+  <!-- オーバーレイ -->
+  <div data-sidemenu-target="overlay"
+      class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"
+      data-action="click->sidemenu#close">
   </div>
 
   <!-- 右サイドバー -->
@@ -51,7 +58,7 @@
   <!-- 試合時間と増減ボタン -->
   <div class="flex flex-col items-center gap-2 w-full max-w-full">
     <!-- 増減ボタン -->
-    <div class="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 w-full relative z-10">
+    <div class="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 w-full relative">
       <button data-action="click->game_timer#increaseMinute" class="text-zinc-700 text-4xl p-2">▲</button>
       <button data-action="click->game_timer#decreaseMinute" class="text-zinc-700 text-4xl p-2">▼</button>
       <select data-game_timer-target="select" class="bg-black text-yellow-400 text-3xl sm:text-4xl text-center p-1 rounded">
