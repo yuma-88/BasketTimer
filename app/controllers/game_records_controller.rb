@@ -20,7 +20,7 @@ class GameRecordsController < ApplicationController
     @game_record.away_team = away_team
 
     if @game_record.save
-      redirect_to game_records_path, notice: "試合記録が作成されました。"
+      redirect_to game_records_path, notice: "試合記録が作成されました！"
     else
       render :new, status: :unprocessable_entity
     end
@@ -38,7 +38,7 @@ class GameRecordsController < ApplicationController
 
     if @game_record.update(game_record_params)
       @game_record.update(home_team_id: home_team.id, away_team_id: away_team.id)
-      redirect_to game_records_path, notice: "試合記録が更新されました。"
+      redirect_to game_records_path, notice: "試合記録が更新されました！"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -46,7 +46,7 @@ class GameRecordsController < ApplicationController
 
   def destroy
     @game_record.destroy!
-    redirect_to game_records_path, notice: "試合記録が削除されました。"
+    redirect_to game_records_path, notice: "試合記録が削除されました！"
   end
 
   private
