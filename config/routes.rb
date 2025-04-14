@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get "timers/show"
-  devise_for :users, controllers: { registrations: 'registrations', passwords: 'passwords' }
+  devise_for :users, controllers: { registrations: "registrations", passwords: "passwords" }
   resources :game_records, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
