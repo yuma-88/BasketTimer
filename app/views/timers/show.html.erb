@@ -42,7 +42,7 @@
   <div class="absolute right-0 top-0 h-full w-10 bg-zinc-900 hidden sm:flex flex-col z-10 border-l border-zinc-700">
     <!-- 上半分に音声ボタン -->
     <div class="flex-1 flex items-center justify-center">
-      <button class="text-white text-2xl w-full h-full" data-action="mousedown->audio#playBuzzerSound mouseup->audio#stopBuzzerSound" title="ブザー"><i class="fas fa-volume-down"></i></button>
+      <button class="text-white text-2xl w-full h-full" data-action="mousedown->audio#playBuzzerSound mouseup->audio#stopBuzzerSound touchstart->audio#playBuzzerSound touchend->audio#stopBuzzerSound" title="ブザー"><i class="fas fa-volume-down"></i></button>
     </div>
 
     <!-- 真ん中に白い横線 -->
@@ -205,7 +205,7 @@
       <i class="fas fa-redo"></i>
     </button>
     <!-- ブザー（右サイドバーのブザー） -->
-    <button class="text-white text-xl" data-action="mousedown->audio#playBuzzerSound mouseup->audio#stopBuzzerSound">
+    <button class="text-white text-xl" data-action="mousedown->audio#playBuzzerSound mouseup->audio#stopBuzzerSound touchstart->audio#playBuzzerSound touchend->audio#stopBuzzerSound">
       <i class="fas fa-volume-down"></i>
     </button>
     <!-- スコア交換（右サイドバーのスワップ） -->
