@@ -5,185 +5,175 @@ export default class extends Controller {
   static values = { selectedTeam: String }
 
   connect() {
-    this.loadSettings();
-    this.updateScoreColors(); // 初期状態でスコアの色を変更
-    this.teamAScoreValue = parseInt(this.teamAScoreTarget.textContent) || 0
-    this.teamBScoreValue = parseInt(this.teamBScoreTarget.textContent) || 0
-    this.selectedTeamValue = "A"; // 初期選択はチームA
-    this.updateSelection(); // 初期選択状態を更新
-    document.addEventListener("keydown", this.handleKeydown.bind(this));
+    this.loadSettings()
+    this.updateScoreColors()
+    this.teamAScoreValue = this.parseScore("teamAScore")
+    this.teamBScoreValue = this.parseScore("teamBScore")
+    this.selectedTeamValue = "A"
+    
+    if (window.matchMedia("(min-width: 640px)").matches) {
+      this.updateSelection()
+    }
+
+    document.addEventListener("keydown", this.handleKeydownBind = this.handleKeydown.bind(this))
   }
 
   disconnect() {
-    document.removeEventListener("keydown", this.handleKeydown.bind(this));
+    document.removeEventListener("keydown", this.handleKeydownBind)
   }
 
   loadSettings() {
-    // sessionStorage から設定を読み込む
-    const savedSettings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
-
-    // teamIdenfication 設定を読み込み
-    this.teamIdentification = savedSettings.teamIdenfication ?? false;
+    const savedSettings = JSON.parse(sessionStorage.getItem("gameSettings")) || {}
+    this.teamIdentification = savedSettings.teamIdenfication ?? false
   }
 
-  // キーボード操作でチームを選択
+  parseScore(targetName) {
+    const el = this[`${targetName}Targets`][0]
+    return parseInt(el?.textContent) || 0
+  }
+
   handleKeydown(event) {
-    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-      this.toggleSelectedTeam();
-    } else if (event.key === "ArrowUp") {
-      this.increaseScore();
-    } else if (event.key === "ArrowDown") {
-      this.decreaseScore();
-    }
-
-    if (event.key === "s" || event.key === "S") {
-      this.resetScores();
-    }
-
-    if (event.key === "c" || event.key === "C") {
-      this.swapScores();
+    switch (event.key) {
+      case "ArrowLeft":
+      case "ArrowRight":
+        this.toggleSelectedTeam()
+        break
+      case "ArrowUp":
+        this.increaseScore()
+        break
+      case "ArrowDown":
+        this.decreaseScore()
+        break
+      case "s":
+      case "S":
+        this.resetScores()
+        break
+      case "c":
+      case "C":
+        this.swapScores()
+        break
     }
   }
 
-  // チーム選択を切り替える
   toggleSelectedTeam() {
-    if (this.selectedTeamValue === "A") {
-      this.selectedTeamValue = "B";
-    } else {
-      this.selectedTeamValue = "A";
-    }
-    this.updateSelection();
+    this.selectedTeamValue = this.selectedTeamValue === "A" ? "B" : "A"
+    this.updateSelection()
   }
 
-  // チーム選択状態を強調表示
   updateSelection() {
-    if (!this.teamAScoreTarget || !this.teamBScoreTarget) {
-      return;
-    }
+    if (!window.matchMedia("(min-width: 640px)").matches) return
 
-    // Tailwindで条件付きクラスの切り替え
-    if (this.selectedTeamValue === "A") {
-      this.teamAScoreTarget.classList.add("border-b-2", "border-red-800");
-      this.teamBScoreTarget.classList.remove("border-b-2", "border-red-800");
-    } else {
-      this.teamBScoreTarget.classList.add("border-b-2", "border-red-800");
-      this.teamAScoreTarget.classList.remove("border-b-2", "border-red-800");
-    }
+    this.teamAScoreTargets.forEach(el =>
+      el.classList.toggle("border-b-2", this.selectedTeamValue === "A")
+    )
+    this.teamBScoreTargets.forEach(el =>
+      el.classList.toggle("border-b-2", this.selectedTeamValue === "B")
+    )
+
+    this.teamAScoreTargets.forEach(el =>
+      el.classList.toggle("border-red-800", this.selectedTeamValue === "A")
+    )
+    this.teamBScoreTargets.forEach(el =>
+      el.classList.toggle("border-red-800", this.selectedTeamValue === "B")
+    )
   }
 
   updateScoreColors() {
-    if (!this.teamAScoreTarget || !this.teamBScoreTarget) {
-        return;
-    }
+    if (!this.teamIdentification) return
 
-    // teamIdentification がオンの場合、スコアAを白、スコアBを青に設定
-    if (this.teamIdentification) {
-      this.teamAScoreTarget.classList.add("!text-white");
-      this.teamBScoreTarget.classList.add("!text-blue-500");
-    }
+    this.teamAScoreTargets.forEach(el => el.classList.add("!text-white"))
+    this.teamBScoreTargets.forEach(el => el.classList.add("!text-blue-500"))
+  }
+
+  updateScore(targetName, value) {
+    this[`${targetName}Targets`].forEach(el => {
+      el.textContent = value
+    })
   }
 
   increaseTeamAScore() {
     this.teamAScoreValue++
     this.updateScore("teamAScore", this.teamAScoreValue)
-    this.playSwichSound();
+    this.playSwichSound()
   }
 
   decreaseTeamAScore() {
     if (this.teamAScoreValue > 0) {
       this.teamAScoreValue--
       this.updateScore("teamAScore", this.teamAScoreValue)
-      this.playSwichSound();
+      this.playSwichSound()
     }
   }
 
   increaseTeamBScore() {
     this.teamBScoreValue++
     this.updateScore("teamBScore", this.teamBScoreValue)
-    this.playSwichSound();
+    this.playSwichSound()
   }
 
   decreaseTeamBScore() {
     if (this.teamBScoreValue > 0) {
       this.teamBScoreValue--
       this.updateScore("teamBScore", this.teamBScoreValue)
-      this.playSwichSound();
+      this.playSwichSound()
     }
   }
 
-  // スコアの増加
   increaseScore() {
     if (this.selectedTeamValue === "A") {
-      this.teamAScoreValue++;
-      this.updateScore("teamAScore", this.teamAScoreValue);
+      this.increaseTeamAScore()
     } else {
-      this.teamBScoreValue++;
-      this.updateScore("teamBScore", this.teamBScoreValue);
+      this.increaseTeamBScore()
     }
-    this.playSwichSound();
   }
 
-  // スコアの減少
   decreaseScore() {
-    if (this.selectedTeamValue === "A" && this.teamAScoreValue > 0) {
-      this.teamAScoreValue--;
-      this.updateScore("teamAScore", this.teamAScoreValue);
-    } else if (this.selectedTeamValue === "B" && this.teamBScoreValue > 0) {
-      this.teamBScoreValue--;
-      this.updateScore("teamBScore", this.teamBScoreValue);
+    if (this.selectedTeamValue === "A") {
+      this.decreaseTeamAScore()
+    } else {
+      this.decreaseTeamBScore()
     }
-    this.playSwichSound();
   }
 
-  // スコアの更新
-  updateScore(target, value) {
-    this[target + "Target"].textContent = value;
-  }
-
-  // チームスコアの交換
   swapScores() {
-    const temp = this.teamAScoreValue;
-    this.teamAScoreValue = this.teamBScoreValue;
-    this.teamBScoreValue = temp;
+    [this.teamAScoreValue, this.teamBScoreValue] = [this.teamBScoreValue, this.teamAScoreValue]
 
-    this.updateScore("teamAScore", this.teamAScoreValue);
-    this.updateScore("teamBScore", this.teamBScoreValue);
+    this.updateScore("teamAScore", this.teamAScoreValue)
+    this.updateScore("teamBScore", this.teamBScoreValue)
 
-    // teamIdentification がオンの場合、色も交換
     if (this.teamIdentification) {
-      // スコアAとスコアBの色を入れ替え
-      if (this.teamAScoreTarget.classList.contains("!text-blue-500")) {
-        // スコアAが青色であれば、スコアAを白に、スコアBを青色に
-        this.teamAScoreTarget.classList.remove("!text-blue-500");
-        this.teamAScoreTarget.classList.add("!text-white");
-        this.teamBScoreTarget.classList.remove("!text-white");
-        this.teamBScoreTarget.classList.add("!text-blue-500");
-      } else {
-        // それ以外（スコアAが白）なら逆にする
-        this.teamAScoreTarget.classList.remove("!text-white");
-        this.teamAScoreTarget.classList.add("!text-blue-500");
-        this.teamBScoreTarget.classList.remove("!text-blue-500");
-        this.teamBScoreTarget.classList.add("!text-white");
-      }
+      this.swapScoreColors()
     }
 
-    this.playSwichSound();
+    this.playSwichSound()
   }
 
-  // スコアリセット
+  swapScoreColors() {
+    const aIsBlue = this.teamAScoreTargets[0]?.classList.contains("!text-blue-500")
+
+    this.teamAScoreTargets.forEach(el => {
+      el.classList.toggle("!text-white", aIsBlue)
+      el.classList.toggle("!text-blue-500", !aIsBlue)
+    })
+
+    this.teamBScoreTargets.forEach(el => {
+      el.classList.toggle("!text-white", !aIsBlue)
+      el.classList.toggle("!text-blue-500", aIsBlue)
+    })
+  }
+
   resetScores() {
-    this.teamAScoreValue = 0;
-    this.teamBScoreValue = 0;
-    this.updateScore("teamAScore", this.teamAScoreValue);
-    this.updateScore("teamBScore", this.teamBScoreValue);
-    this.playSwichSound();
+    this.teamAScoreValue = 0
+    this.teamBScoreValue = 0
+    this.updateScore("teamAScore", 0)
+    this.updateScore("teamBScore", 0)
+    this.playSwichSound()
   }
 
-  // サウンド再生
   playSwichSound() {
-    const audioController = this.application.controllers.find(controller => controller.identifier === 'audio');
+    const audioController = this.application.controllers.find(controller => controller.identifier === "audio")
     if (audioController) {
-      audioController.playSwichSound();
+      audioController.playSwichSound()
     }
   }
 }
