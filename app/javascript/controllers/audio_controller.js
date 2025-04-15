@@ -9,7 +9,7 @@ export default class extends Controller {
     this.buzzerSound = new Audio("/sounds/buzzer.mp3");
     this.memberChangeSound = new Audio("/sounds/member_change.mp3");
 
-    this.clickSound = new Audio("/sounds/click_v2.mp3");
+    this.clickSound = new Audio("/sounds/click_v2.mp3?v=" + Date.now());
     this.swichSound = new Audio("/sounds/swich.mp3");
 
     // 各カウントダウン音声ファイルの作成
@@ -91,7 +91,7 @@ export default class extends Controller {
   // 音声を再生するメソッド（音声設定が有効な場合のみ）
   playClickSound() {
     if (this.endSound) { // 音声設定が有効な場合のみ再生
-      const clickSound = new Audio("/sounds/click_v2.mp3");
+      const clickSound = new Audio("/sounds/click_v2.mp3?v=" + Date.now());
       clickSound.volume = 0.3;
       clickSound.play();
     }
