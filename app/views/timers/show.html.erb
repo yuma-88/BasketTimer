@@ -1,6 +1,6 @@
 <% content_for :title, "タイマー" %>
 <div data-controller="game_timer score shot_clock sidemenu audio"
-     class="w-full min-h-[100svh] bg-black text-white flex flex-col items-center justify-start px-4 sm:px-8 md:px-16 lg:px-20 mx-auto relative pb-14">
+     class="w-full min-h-[100svh] bg-black text-white flex flex-col items-center justify-center px-4 sm:px-8 md:px-16 lg:px-20 mx-auto relative">
 
   <!-- 左サイドバー -->
   <div class="absolute left-0 top-0 h-full w-10 bg-zinc-900 hidden sm:flex flex-col z-10 border-r border-zinc-700">
@@ -195,7 +195,7 @@
   </div>
 
   <!-- スマホ専用：下部操作メニュー -->
-  <div class="fixed bottom-0 left-0 w-full h-14 bg-zinc-900 border-t border-zinc-700 flex justify-around items-center sm:hidden z-50">
+  <div class="absolute bottom-0 left-0 w-full h-14 bg-zinc-900 border-t border-zinc-700 flex justify-around items-center sm:hidden z-50">
     <!-- メニュー開閉（左サイドバーのメニュー） -->
     <button class="text-white text-xl" data-action="click->sidemenu#toggle">
       <i class="fas fa-bars"></i>
