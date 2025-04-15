@@ -10,10 +10,7 @@ export default class extends Controller {
     this.memberChangeSound = new Audio("/sounds/member_change.mp3");
 
     this.clickSound = new Audio("/sounds/click.mp3");
-    this.clickSound.volume = 0.3;
-
     this.swichSound = new Audio("/sounds/swich.mp3");
-    this.swichSound.volume = 0.3;
 
     // 各カウントダウン音声ファイルの作成
     this.countdownSounds = {
@@ -83,17 +80,20 @@ export default class extends Controller {
     }
   }
 
-  playClickSound() {
-    if (this.endSound) {
-      this.clickSound.currentTime = 0; // 先頭に戻す
-      this.clickSound.play();
+  playSwichSound() {
+    if (this.endSound) { // 音声設定が有効な場合のみ再生
+      const swichSound = new Audio("/sounds/swich.mp3");
+      swichSound.volume = 0.3;
+      swichSound.play();
     }
   }
-  
-  playSwichSound() {
-    if (this.endSound) {
-      this.swichSound.currentTime = 0;
-      this.swichSound.play();
+
+  // 音声を再生するメソッド（音声設定が有効な場合のみ）
+  playClickSound() {
+    if (this.endSound) { // 音声設定が有効な場合のみ再生
+      const clickSound = new Audio("/sounds/click.mp3");
+      clickSound.volume = 0.3;
+      clickSound.play();
     }
   }
 
