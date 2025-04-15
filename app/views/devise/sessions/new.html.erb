@@ -1,8 +1,8 @@
 <% content_for :title, "ログイン" %>
 
-<div class="w-full h-screen bg-zinc-700">
+<div class="w-full h-screen bg-zinc-700 pt-16">
   <!-- ヘッダー -->
-  <header class="bg-zinc-900 text-white py-4 border-b border-zinc-500">
+  <header class="fixed top-0 left-0 w-full z-50 bg-zinc-900 text-white py-4 border-b border-zinc-500">
     <div class="w-full flex justify-between items-center px-6">
       <h1 class="text-xl font-bold">ログイン画面</h1>
       <nav class="space-x-4">
@@ -42,12 +42,6 @@
         <div class="mb-4">
           <%= f.submit "ログイン", class: "w-full py-2 bg-zinc-900 text-white font-semibold border border-orange-500 rounded-lg hover:bg-zinc-600 transition" %>
         </div>
-      <% end %>
-
-      <% if notice %>
-        <p class="text-green-400 text-sm text-center mb-2"><%= notice %></p>
-      <% elsif alert %>
-        <p class="text-red-400 text-sm text-center mb-2"><%= alert %></p>
       <% end %>
 
       <div class="text-center">
