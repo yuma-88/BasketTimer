@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["time"];
+  static targets = ["time1", "time2"]; // 複数のターゲットを追加
   static values = {
     running: Boolean,
     seconds: Number
@@ -9,13 +9,16 @@ export default class extends Controller {
 
   connect() {
     this.runningValue = false;
-    this.secondsValue = 24.0; // 内部では小数点を扱う（初期値を24.0秒に設定）
+    this.secondsValue = 24.0; // 初期値を24.0秒に設定
     this.timer = null;
     this.updateDisplay();
   }
 
   updateDisplay() {
-    this.timeTarget.textContent = Math.floor(this.secondsValue); // 画面に秒数を整数として表示
+    // secondsValueが0未満にならないようにする
+    const displayValue = Math.max(0, Math.floor(this.secondsValue)); // 0未満にならないように
+    this.time1Target.textContent = displayValue; // time1に表示
+    this.time2Target.textContent = displayValue; // time2に表示
   }
 
   toggleShotClock() {
@@ -57,15 +60,13 @@ export default class extends Controller {
   }
 
   setTwentyFour() {
-    // ストップ状態の場合は、24秒に設定して停止
     if (!this.runningValue) {
       this.secondsValue = 24.0; // 24.0秒に設定
-      this.updateDisplay(); // 画面に表示
+      this.updateDisplay();
     } else {
-      // 動作中の場合は、24秒に設定してすぐに再開
       this.secondsValue = 24.0; // 24.0秒に設定
-      this.updateDisplay(); // 画面に表示
-      this.start(); // 再開
+      this.updateDisplay();
+      this.start();
     }
     this.playSwichSound();
   }
@@ -91,14 +92,14 @@ export default class extends Controller {
   }
 
   increase() {
-    this.secondsValue += 1; // 0.1秒増加
+    this.secondsValue += 1; // 1秒増加
     this.updateDisplay();
     this.playSwichSound();
   }
 
   decrease() {
     if (this.secondsValue > 0) {
-      this.secondsValue -= 1; // 0.1秒減少
+      this.secondsValue -= 1; // 1秒減少
       this.updateDisplay();
       this.playSwichSound();
     }
