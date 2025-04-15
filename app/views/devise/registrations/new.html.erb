@@ -1,8 +1,8 @@
 <% content_for :title, "新規登録" %>
 
-<div class="w-full h-screen bg-zinc-700">
+<div class="w-full h-screen bg-zinc-700 pt-16">
   <!-- ヘッダー -->
-  <header class="bg-zinc-900 text-white py-4 border-b border-zinc-500">
+  <header class="fixed top-0 left-0 w-full z-50 bg-zinc-900 text-white py-4 border-b border-zinc-500">
     <div class="w-full flex justify-between items-center px-6">
       <h1 class="text-xl font-bold">新規登録</h1>
       <nav class="space-x-4">
@@ -30,25 +30,30 @@
 
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
 
-        <% if resource.errors.any? %>
+        <% prioritized_attributes = [:username, :email, :password, :password_confirmation] %>
+        <% sorted_errors = resource.errors.details.sort_by { |attribute, _| prioritized_attributes.index(attribute) || prioritized_attributes.size } %>
+
+        <% if sorted_errors.any? %>
           <div class="bg-zinc-800 border-l-4 border-orange-500 text-red-400 p-4 mb-4 rounded shadow">
             <p class="font-semibold mb-2">以下のエラーがあります：</p>
             <ul class="list-disc list-inside space-y-1">
-              <% resource.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
+              <% sorted_errors.each do |attribute, _| %>
+                <% resource.errors.full_messages_for(attribute).each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
               <% end %>
             </ul>
           </div>
         <% end %>
 
         <div class="mb-4">
-          <%= f.label :email, "メールアドレス", class: "block text-orange-500 font-semibold" %>
-          <%= f.email_field :email, placeholder: "Eメール", class: "mt-1 block w-full px-3 py-2 border border-orange-500 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-zinc-900 text-white" %>
+          <%= f.label :username, "ユーザー名", class: "block text-orange-500 font-semibold" %>
+          <%= f.text_field :username, placeholder: "ユーザー名", class: "mt-1 block w-full px-3 py-2 border border-orange-500 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-zinc-900 text-white" %>
         </div>
 
         <div class="mb-4">
-          <%= f.label :username, "ユーザー名", class: "block text-orange-500 font-semibold" %>
-          <%= f.text_field :username, placeholder: "ユーザー名", class: "mt-1 block w-full px-3 py-2 border border-orange-500 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-zinc-900 text-white" %>
+          <%= f.label :email, "メールアドレス", class: "block text-orange-500 font-semibold" %>
+          <%= f.email_field :email, placeholder: "Eメール", class: "mt-1 block w-full px-3 py-2 border border-orange-500 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-zinc-900 text-white" %>
         </div>
 
         <div class="mb-4">
@@ -57,8 +62,8 @@
         </div>
 
         <div class="mb-4">
-          <%= f.label :password_confirmation, "パスワード確認", class: "block text-orange-500 font-semibold" %>
-          <%= f.password_field :password_confirmation, placeholder: "パスワード確認", class: "mt-1 block w-full px-3 py-2 border border-orange-500 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-zinc-900 text-white" %>
+          <%= f.label :password_confirmation, "確認用パスワード", class: "block text-orange-500 font-semibold" %>
+          <%= f.password_field :password_confirmation, placeholder: "確認用パスワード", class: "mt-1 block w-full px-3 py-2 border border-orange-500 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-zinc-900 text-white" %>
         </div>
 
         <div class="mb-4">
