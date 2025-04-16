@@ -61,7 +61,8 @@ export default class extends Controller {
   }
 
   updateSelection() {
-    if (!window.matchMedia("(min-width: 640px)").matches) return
+    const isDesktop = window.matchMedia("(hover: hover)").matches
+    if (!isDesktop) return
 
     this.teamAScoreTargets.forEach(el =>
       el.classList.toggle("border-b-2", this.selectedTeamValue === "A")
