@@ -4,6 +4,7 @@ export default class extends Controller {
   static targets = ["menu", "overlay"];
 
   connect() {
+    this.hideMenu();
     document.addEventListener("keydown", this.handleKeydown.bind(this));
   }
 
@@ -20,18 +21,33 @@ export default class extends Controller {
 
   toggle() {
     const menu = this.menuTarget;
-
-    // サイドメニューをスライド表示（translate-x-full → translate-x-0）
-    menu.classList.toggle("-translate-x-full");  // メニューを画面外にスライド
-    menu.classList.toggle("translate-x-0");      // メニューをスライドイン
-    this.overlayTarget.classList.toggle("hidden");  // オーバーレイの表示/非表示
+    const overlay = this.overlayTarget;
+  
+    const isHidden = menu.classList.contains("-translate-x-full");
+  
+    if (isHidden) {
+      this.showMenu();
+    } else {
+      this.hideMenu();
+    }
+  
     this.playSwichSound();
+  }
+  
+  showMenu() {
+    this.menuTarget.classList.remove("-translate-x-full", "opacity-0", "pointer-events-none");
+    this.menuTarget.classList.add("translate-x-0");
+    this.overlayTarget.classList.remove("hidden");
+  }
+  
+  hideMenu() {
+    this.menuTarget.classList.add("-translate-x-full", "opacity-0", "pointer-events-none");
+    this.menuTarget.classList.remove("translate-x-0");
+    this.overlayTarget.classList.add("hidden");
   }
 
   close() {
-    this.menuTarget.classList.add("-translate-x-full");  // メニューを非表示（スライドアウト）
-    this.menuTarget.classList.remove("translate-x-0");  // メニューを非表示（スライドアウト）
-    this.overlayTarget.classList.add("hidden");  // オーバーレイを非表示
+    this.hideMenu();
   }
 
   playSwichSound() {
