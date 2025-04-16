@@ -1,6 +1,6 @@
 <% content_for :title, "試合詳細" %>
 
-<div class="w-full h-screen bg-zinc-800 pt-16">
+<div class="w-full min-h-[100svh] bg-zinc-800 pt-16">
   <header class="fixed top-0 left-0 w-full z-50 bg-zinc-900 text-white py-4 border-b border-zinc-500">
     <div class="w-full flex justify-between items-center px-6">
       <h1 class="text-xl font-bold">試合詳細</h1>
@@ -15,7 +15,10 @@
 
   <main class="p-4 py-8">
     <div class="bg-zinc-700 p-6 rounded-lg border border-orange-500 shadow-md max-w-4xl mx-auto">
-      <div class="grid grid-cols-[200px_1fr] gap-y-3 text-white text-base">
+      <div class="grid grid-cols-[175px_1fr] gap-y-3 text-white text-base">
+        <div class="text-orange-500 font-semibold">日付:</div>
+        <div class="text-lg font-bold"><%= @game_record.date.strftime("%Y-%m-%d") %></div>
+
         <div class="text-orange-500 font-semibold">ホームチーム:</div>
         <div class="text-lg font-bold"><%= @game_record.home_team.name %></div>
 
@@ -30,13 +33,10 @@
 
         <div class="text-orange-500 font-semibold">アウェイチーム得点:</div>
         <div class="text-lg font-bold"><%= @game_record.score_away_team %></div>
-
-        <div class="text-orange-500 font-semibold">日付:</div>
-        <div class="text-lg font-bold"><%= @game_record.date.strftime("%Y-%m-%d") %></div>
-
-        <div class="text-orange-500 font-semibold">概要:</div>
-        <div class="text-lg font-bold"><%= @game_record.description.present? ? @game_record.description : "なし" %></div>
       </div>
+      
+      <div class="text-orange-500 font-semibold mt-4">概要:</div>
+      <div class="p-2 text-lg font-bold text-white"><%= @game_record.description.present? ? @game_record.description : "なし" %></div>
 
       <div class="mt-6">
         <%= link_to '戻る', game_records_path, class: "inline-block bg-zinc-600 text-white px-4 py-2 rounded hover:bg-zinc-800 transition border border-orange-500" %>

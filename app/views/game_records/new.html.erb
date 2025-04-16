@@ -1,6 +1,6 @@
 <% content_for :title, "新規作成" %>
 
-<div class="w-full h-screen bg-zinc-700 pt-16">
+<div class="w-full min-h-screen bg-zinc-700 pt-16 pb-24">
   <header class="fixed top-0 left-0 w-full z-50 bg-zinc-900 text-white py-4 border-b border-zinc-500">
     <div class="w-full flex justify-between items-center px-6">
       <h1 class="text-xl font-bold">新規作成</h1>
@@ -15,7 +15,7 @@
 
   <div class="py-2 px-4">
     <% if @game_record.errors.any? %>
-      <div class="bg-zinc-600 border border-orange-500 alert alert-danger p-4 mb-4 rounded">
+      <div class="bg-zinc-600 border border-orange-500 alert alert-danger p-4 mb-4 rounded text-left">
         <ul class="list-disc pl-5 text-red-400">
           <% @game_record.errors.full_messages.each do |message| %>
             <li><%= message %></li>
