@@ -1,13 +1,20 @@
 <% content_for :title, "設定" %>
 
-<div class="min-h-[100svh] bg-zinc-800 p-6" data-controller="settings audio">
-  <!-- 戻るボタン -->
-  <button class="text-white text-2xl mb-6" id="backButton" 
-        data-timers-path="<%= timers_path %>"
-        data-action="click->audio#playSwichSound"
-        onclick="window.location=this.dataset.timersPath">
-    ← 戻る
-  </button>
+<div class="min-h-[100svh] bg-zinc-800 p-6 pt-20" data-controller="settings audio">
+
+  <header class="fixed top-0 left-0 w-full z-50 bg-zinc-900 text-white py-4 border-b border-zinc-500">
+  <div class="w-full flex justify-between items-center px-6">
+    <h1 class="text-xl font-bold">設定</h1>
+    <nav class="space-x-4">
+      <%= link_to timers_path, class: "text-orange-400 hover:text-orange-300", data: { action: "click->audio#playSwichSound" } do %>
+        <i class="text-xl fa-solid fa-stopwatch"></i>
+      <% end %>
+      <%= link_to menus_path, class: "hover:underline", data: { action: "click->audio#playSwichSound" } do %>
+        <i class="text-xl fa-solid fa-bars"></i>
+      <% end %>
+    </nav>
+  </div>
+  </header>
 
   <!-- メインタイマー -->
   <h2 class="text-lg font-bold text-orange-400 mb-2">メインタイマー</h2>
