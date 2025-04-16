@@ -30,8 +30,8 @@
 
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
         <div class="mb-4">
-          <%= f.label :email, "メールアドレス", class: "block text-orange-500 font-semibold" %>
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "ユーザー名 または Eメール", class: "mt-1 block w-full px-3 py-2 border border-orange-500 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-zinc-900 text-white" %>
+          <%= f.label :login, "ユーザー名 or メールアドレス", class: "block text-orange-500 font-semibold" %>
+          <%= f.text_field :login, autofocus: true, autocomplete: "username", placeholder: "ユーザー名 または Eメール", class: "mt-1 block w-full px-3 py-2 border border-orange-500 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-zinc-900 text-white" %>
         </div>
 
         <div class="mb-4">
