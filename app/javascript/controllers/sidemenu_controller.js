@@ -55,6 +55,7 @@ export default class extends Controller {
   // オーバーレイをクリックした際に閉じる
   close() {
     this.hideMenu();
+    this.playSwichSound();
   }
 
   playSwichSound() {

@@ -14,3 +14,7 @@ RUN mkdir /myapp
 WORKDIR /myapp
 RUN gem install bundler
 COPY . /myapp
+
+# Node モジュールのインストール（Tailwind / esbuild 含む）
+COPY package.json yarn.lock ./
+RUN yarn install
