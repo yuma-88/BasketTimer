@@ -5,6 +5,7 @@ ja:
       game_record: 試合記録
     attributes:
       user:
+        login: ユーザー名orメールアドレス
         email: メールアドレス
         username: ユーザー名
         password: パスワード
