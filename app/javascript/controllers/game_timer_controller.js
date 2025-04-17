@@ -171,19 +171,25 @@ export default class extends Controller {
   }
 
   resetAll() {
-    this.isResetAll = true;
-    this.selectTargets.forEach(select => (select.value = "P1"));
-    this.resetTime();
-
-    const shotClockController = this.application.controllers.find(c => c.identifier === 'shot_clock');
-    if (shotClockController) shotClockController.reset();
-
-    const scoreController = this.application.controllers.find(c => c.identifier === 'score');
-    if (scoreController) scoreController.resetScores();
-
-    this.hasPlayedMemberChange = false;
-    this.preventCountdownSound = false;
-    this.isResetAll = false;
+    // 確認ダイアログを表示
+    const confirmation = window.confirm("ゲームをリセットしますか？");
+  
+    // ユーザーが「OK」をクリックした場合にのみリセット処理を実行
+    if (confirmation) {
+      this.isResetAll = true;
+      this.selectTargets.forEach(select => (select.value = "P1"));
+      this.resetTime();
+  
+      const shotClockController = this.application.controllers.find(c => c.identifier === 'shot_clock');
+      if (shotClockController) shotClockController.reset();
+  
+      const scoreController = this.application.controllers.find(c => c.identifier === 'score');
+      if (scoreController) scoreController.resetScores();
+  
+      this.hasPlayedMemberChange = false;
+      this.preventCountdownSound = false;
+      this.isResetAll = false;
+    }
   }
 
   countdown() {
