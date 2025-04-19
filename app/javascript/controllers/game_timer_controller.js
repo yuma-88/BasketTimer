@@ -37,7 +37,7 @@ export default class extends Controller {
 
     const mainTime = savedSettings.mainTime || "10:00";
     const breakTime = savedSettings.breakTime || "1:00";
-    const halfTime = savedSettings.halfTime || "10:00";
+    const halfTime = savedSettings.halfTime || "15:00";
 
     const [minutes, seconds] = mainTime.split(":").map(Number);
     this.minutesValue = minutes;
