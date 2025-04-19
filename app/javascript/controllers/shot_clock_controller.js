@@ -14,6 +14,10 @@ export default class extends Controller {
     this.updateDisplay();
   }
 
+  disconnect() {
+    this.stop();
+  }
+
   updateDisplay() {
     // secondsValueが0未満にならないようにする
     const displayValue = Math.max(0, Math.floor(this.secondsValue)); // 0未満にならないように
@@ -50,7 +54,10 @@ export default class extends Controller {
 
   stop() {
     this.runningValue = false;
-    clearInterval(this.timer);
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
   }
 
   reset() {
