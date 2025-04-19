@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get "timers/show"
-  devise_for :users, controllers: { 
+  devise_for :users, controllers: {
     registrations: "registrations",
     passwords: "passwords",
     omniauth_callbacks: "users/omniauth_callbacks"
