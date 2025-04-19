@@ -6,30 +6,30 @@ export default class extends Controller {
 
   connect() {
     this.runningValue = false;
-    this.loadSettings(); // 設定を読み込む
+    this.loadSettings();
     this.timer = null;
     this.updateDisplay();
-
-    // 設定更新イベントをリッスン
-    window.addEventListener("settings:updated", () => this.loadSettings());  // アロー関数を使用
-
-    // 各 select に change イベントを設定
-    this.selectTargets.forEach(select => {
-      select.addEventListener("change", event => this.handleSelectChange(event)); // アロー関数を使用
-    });
-
-    // キーボードのイベントをリッスン（Enterキーやスペースキーでスタート/ストップ）
-    document.addEventListener("keydown", event => this.handleKeydown(event)); // アロー関数を使用
+  
+    // イベントリスナー保持（bindして同じ参照に）
+    this._handleSettingsUpdated = this.loadSettings.bind(this);
+    this._handleKeydown = this.handleKeydown.bind(this);
+    this._handleSelectChange = event => this.handleSelectChange(event);
+  
+    window.addEventListener("settings:updated", this._handleSettingsUpdated);
+    document.addEventListener("keydown", this._handleKeydown);
+    this.selectTargets.forEach(select =>
+      select.addEventListener("change", this._handleSelectChange)
+    );
   }
-
+  
   disconnect() {
-    window.removeEventListener("settings:updated", () => this.loadSettings());  // 同じくアロー関数を使用
-    document.removeEventListener("keydown", event => this.handleKeydown(event)); // 同じくアロー関数を使用
+    window.removeEventListener("settings:updated", this._handleSettingsUpdated);
+    document.removeEventListener("keydown", this._handleKeydown);
+    this.selectTargets.forEach(select =>
+      select.removeEventListener("change", this._handleSelectChange)
+    );
 
-    // イベントリスナー削除
-    this.selectTargets.forEach(select => {
-      select.removeEventListener("change", event => this.handleSelectChange(event)); // 同じくアロー関数を使用
-    });
+    this.stop();
   }
 
   loadSettings() {
@@ -138,7 +138,10 @@ export default class extends Controller {
 
   stop() {
     this.runningValue = false;
-    clearInterval(this.timer);
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
 
     if (["インターバル", "ハーフ"].includes(this.currentSelectValue)) return;
 

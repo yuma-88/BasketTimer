@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_19_152809) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_18_154113) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -28,6 +28,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_19_152809) do
     t.index ["away_team_id"], name: "index_game_records_on_away_team_id"
     t.index ["home_team_id"], name: "index_game_records_on_home_team_id"
     t.index ["user_id"], name: "index_game_records_on_user_id"
+  end
+
+  create_table "sns_credentials", force: :cascade do |t|
+    t.string "provider"
+    t.string "uid"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sns_credentials_on_user_id"
   end
 
   create_table "teams", force: :cascade do |t|
@@ -52,4 +61,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_19_152809) do
   add_foreign_key "game_records", "teams", column: "away_team_id"
   add_foreign_key "game_records", "teams", column: "home_team_id"
   add_foreign_key "game_records", "users"
+  add_foreign_key "sns_credentials", "users"
 end

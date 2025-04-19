@@ -48,6 +48,12 @@
         <%= link_to "パスワードを忘れた？", new_user_password_path, class: "text-orange-500 hover:underline block mb-4" %>
         <p class="text-white">アカウントを持っていない？ <%= link_to "新規作成", new_user_registration_path, class: "text-orange-500 hover:underline" %></p>
       </div>
+
+      <div class="mt-6 text-center">
+        <%= link_to user_google_oauth2_omniauth_authorize_path, class: "inline-block py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600 transition" do %>
+          <i class="fab fa-google mr-2"></i> Googleでログイン
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
