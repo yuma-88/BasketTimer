@@ -21,19 +21,30 @@
   <div class="bg-zinc-700 border border-orange-500 p-4 rounded-lg mb-6 shadow-md text-white">
     <div class="space-y-3">
       <div class="flex justify-between items-center border-b border-zinc-600 pb-2">
-        <span>メインタイム（試合時間）</span>
-        <span data-settings-target="mainTime" class="cursor-pointer text-xl text-orange-300 hover:underline"
-              data-action="click->settings#editTime blur->settings#saveTime keydown->settings#handleEnter">10:00</span>
+        <span>メインタイム</span>
+        <div data-settings-target="mainTime" data-settings-target-key="mainTime" class="flex items-center gap-1 text-xl text-orange-300">
+          <select class="minutes-select bg-zinc-800 text-white rounded px-1 py-1 text-sm sm:px-2 sm:text-base sm:py-1.5" data-action="change->settings#saveTime"></select>
+          <span>:</span>
+          <select class="seconds-select bg-zinc-800 text-white rounded px-1 py-1 text-sm sm:px-2 sm:text-base sm:py-1.5" data-action="change->settings#saveTime"></select>
+        </div>
       </div>
+      
       <div class="flex justify-between items-center border-b border-zinc-600 pb-2">
-        <span>インターバル（P1,P2とP3,P4の間）</span>
-        <span data-settings-target="breakTime" class="cursor-pointer text-xl text-orange-300 hover:underline"
-              data-action="click->settings#editTime blur->settings#saveTime keydown->settings#handleEnter">1:00</span>
+        <span>インターバル</span>
+        <div data-settings-target="breakTime" data-settings-target-key="breakTime" class="flex items-center gap-1 text-xl text-orange-300">
+          <select class="minutes-select bg-zinc-800 text-white rounded px-1 py-1 text-sm sm:px-2 sm:text-base sm:py-1.5" data-action="change->settings#saveTime"></select>
+          <span>:</span>
+          <select class="seconds-select bg-zinc-800 text-white rounded px-1 py-1 text-sm sm:px-2 sm:text-base sm:py-1.5" data-action="change->settings#saveTime"></select>
+        </div>
       </div>
+      
       <div class="flex justify-between items-center border-b border-zinc-600 pb-2">
         <span>ハーフタイム（P2,P3の間）</span>
-        <span data-settings-target="halfTime" class="cursor-pointe text-xl text-orange-300 hover:underline"
-              data-action="click->settings#editTime blur->settings#saveTime keydown->settings#handleEnter">10:00</span>
+        <div data-settings-target="halfTime" data-settings-target-key="halfTime" class="flex items-center gap-1 text-xl text-orange-300">
+          <select class="minutes-select bg-zinc-800 text-white rounded px-1 py-1 text-sm sm:px-2 sm:text-base sm:py-1.5" data-action="change->settings#saveTime"></select>
+          <span>:</span>
+          <select class="seconds-select bg-zinc-800 text-white rounded px-1 py-1 text-sm sm:px-2 sm:text-base sm:py-1.5" data-action="change->settings#saveTime"></select>
+        </div>
       </div>
       <div class="flex justify-between items-center">
         <span>エンドレス（メインとインターバルの繰り返し）</span>

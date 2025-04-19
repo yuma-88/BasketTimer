@@ -9,28 +9,84 @@ export default class extends Controller {
   ];
 
   connect() {
-    this.loadSettings();
-    this.updateAudioSettings();  // 初期状態の音声設定を反映
+    this.initializeTimeSelectors(); // 時間の選択肢を作る
+    this.loadSettings(); // 保存された設定を読み込む
+    this.updateAudioSettings(); // 音声のON/OFFの設定を反映する
   }
 
-  // 設定を読み込む
+  initializeTimeSelectors() {
+    const targets = [this.mainTimeTarget, this.breakTimeTarget, this.halfTimeTarget];
+
+    targets.forEach(target => {
+      const minutesSelect = target.querySelector(".minutes-select"); // 分を探す
+      const secondsSelect = target.querySelector(".seconds-select"); // 秒を探す
+
+      if (!minutesSelect || !secondsSelect) return; // 何もない場合スキップ。エラー回避
+
+      // 一旦空にし二重にならないようにリセット
+      minutesSelect.innerHTML = "";
+      secondsSelect.innerHTML = "";
+
+      for (let i = 0; i <= 30; i++) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = i.toString().padStart(2, "0");
+        minutesSelect.appendChild(option);
+      }
+
+      for (let i = 0; i < 60; i++) {
+        const option = document.createElement("option");
+        option.value = i.toString().padStart(2, "0");
+        option.textContent = i.toString().padStart(2, "0");
+        secondsSelect.appendChild(option);
+      }
+    });
+  }
+
   loadSettings() {
     const savedSettings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
 
-    this.mainTimeTarget.textContent = savedSettings.mainTime || "10:00";
-    this.breakTimeTarget.textContent = savedSettings.breakTime || "1:00";
-    this.halfTimeTarget.textContent = savedSettings.halfTime || "10:00";
-    this.endlessTarget.checked = savedSettings.endless ?? false;
+    const applyTime = (target, key, fallback = "10:00") => {
+      const time = savedSettings[key] || fallback;
+      const [min, sec] = time.split(":");
 
+      const minSelect = target.querySelector(".minutes-select");
+      const secSelect = target.querySelector(".seconds-select");
+
+      if (minSelect && secSelect) {
+        minSelect.value = parseInt(min).toString();
+        secSelect.value = parseInt(sec).toString().padStart(2, "0");
+      }
+    };
+
+    applyTime(this.mainTimeTarget, "mainTime", "10:00");
+    applyTime(this.breakTimeTarget, "breakTime", "1:00");
+    applyTime(this.halfTimeTarget, "halfTime", "15:00");
+
+    this.endlessTarget.checked = savedSettings.endless ?? false;
     this.sync24TimerTarget.checked = savedSettings.sync24Timer ?? false;
     this.teamIdenficationTarget.checked = savedSettings.teamIdenfication ?? false;
-
     this.enableAudioTarget.checked = savedSettings.enableAudio ?? true;
     this.countdownVoiceTarget.checked = savedSettings.countdownVoice ?? true;
     this.memberChangeVoiceTarget.checked = savedSettings.memberChangeVoice ?? false;
   }
 
-  // 設定を保存する
+  saveTime(event) {
+    const wrapper = event.target.closest("[data-settings-target]");
+    const key = wrapper.dataset.settingsTargetKey;
+
+    const min = wrapper.querySelector(".minutes-select")?.value || "0";
+    const sec = wrapper.querySelector(".seconds-select")?.value || "00";
+
+    const time = `${parseInt(min)}:${sec.padStart(2, "0")}`;
+
+    const settings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
+    settings[key] = time;
+    sessionStorage.setItem("gameSettings", JSON.stringify(settings));
+
+    window.dispatchEvent(new Event("settings:updated"));
+  }
+
   saveSettings(event) {
     const target = event.target;
     const settingName = target.dataset.settingsTarget;
@@ -40,21 +96,17 @@ export default class extends Controller {
     settings[settingName] = settingValue;
     sessionStorage.setItem("gameSettings", JSON.stringify(settings));
 
-    // 設定更新イベント
     window.dispatchEvent(new Event("settings:updated"));
 
-    // 音声設定が変わったとき
     if (settingName === "enableAudio") {
       this.updateAudioSettings();
     }
   }
 
-  // 音声設定を更新する（リアルタイム通知）
   updateAudioSettings() {
     const enableAudio = this.enableAudioTarget.checked;
 
     const settings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
-
     settings["enableAudio"] = enableAudio;
     settings["countdownVoice"] = enableAudio ? this.countdownVoiceTarget.checked : false;
     settings["memberChangeVoice"] = enableAudio ? this.memberChangeVoiceTarget.checked : false;
@@ -68,42 +120,9 @@ export default class extends Controller {
       this.memberChangeVoiceTarget.checked = false;
     }
 
-    // カスタムイベントで通知
     window.dispatchEvent(new CustomEvent("audio:setting-changed", {
       detail: { enableAudio: enableAudio }
     }));
-  }
-
-  editTime(event) {
-    const target = event.target;
-    target.contentEditable = "true";
-    target.focus();
-  }
-
-  saveTime(event) {
-    const target = event.target;
-    const newTime = target.innerText.trim();
-
-    if (!/^\d{1,2}:\d{2}$/.test(newTime)) {
-      alert("正しい時間形式（MM:SS）で入力してください！");
-      this.loadSettings();
-      return;
-    }
-
-    target.contentEditable = "false";
-
-    const settings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
-    settings[target.dataset.settingsTarget] = newTime;
-    sessionStorage.setItem("gameSettings", JSON.stringify(settings));
-
-    window.dispatchEvent(new Event("settings:updated"));
-  }
-
-  handleEnter(event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      event.target.blur();
-    }
   }
 
   playSwichSound() {
