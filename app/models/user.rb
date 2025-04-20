@@ -26,7 +26,7 @@ class User < ApplicationRecord
     # SnsCredentialsテーブルにデータがないときの処理
     def without_sns_data(auth)
       user = User.where(email: auth.info.email).first
-    
+
       if user.present?
         sns = SnsCredential.create(
           uid: auth.uid,
@@ -49,7 +49,7 @@ class User < ApplicationRecord
       end
       { user:, sns: }
     end
-    
+
     def with_sns_data(auth, snscredential)
       user = User.where(id: snscredential.user_id).first
       if user.blank?
