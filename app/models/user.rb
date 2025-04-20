@@ -33,11 +33,13 @@ class User < ApplicationRecord
           provider: auth.provider,
           user_id: user.id
         )
-      else   # User.newの記事があるが、newは保存までは行わないのでcreateで保存をかける
+      else
+        token = Devise.friendly_token(10)
         user = User.create(
           username: auth.info.name,
           email: auth.info.email,
-          password: Devise.friendly_token(6)
+          password: token,
+          password_confirmation: token
         )
         sns = SnsCredential.create(
           user_id: user.id,
@@ -45,18 +47,18 @@ class User < ApplicationRecord
           provider: auth.provider
         )
       end
-      { user:, sns: }   # ハッシュ形式で呼び出し元に返す
+      { user:, sns: }
     end
 
-    # SnsCredentialsテーブルにデータがあるときの処理
     def with_sns_data(auth, snscredential)
       user = User.where(id: snscredential.user_id).first
-      # 変数userの中身が空文字, 空白文字, false, nilの時の処理
       if user.blank?
+        token = Devise.friendly_token(10)
         user = User.create(
           username: auth.info.name,
           email: auth.info.email,
-          password: Devise.friendly_token(6)
+          password: token,
+          password_confirmation: token
         )
       end
       { user: }

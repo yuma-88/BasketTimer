@@ -105,6 +105,8 @@ ja:
       send_instructions: アカウントのロック解除方法を数分以内にメールでご連絡します。
       send_paranoid_instructions: アカウントが見つかった場合、アカウントのロック解除方法を数分以内にメールでご連絡します。
       unlocked: アカウントをロック解除しました。
+    omniauth_callbacks:
+      success: "%{kind} アカウントによる認証に成功しました！"
   errors:
     messages:
       reset_password_token: "このページは期限切れか無効です。再度リクエストしてください。"
