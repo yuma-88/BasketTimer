@@ -24,9 +24,9 @@
     <ul class="flex flex-col gap-4 text-lg text-left"> <!-- text-left を追加 -->
       <li><button data-action="click->game_timer#resetTime">タイマーリセット</button></li>
       <li><button data-action="click->score#resetScores">スコアリセット</button></li>
-      <li><%= link_to settings_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %> 設定 <% end %></li>
-      <li><%= link_to new_user_session_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>試合記録 <% end %></li>
-      <li><button>確認用GPT</button></li>
+      <li><%= link_to settings_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>設定<% end %></li>
+      <li><%= link_to new_user_session_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>試合記録<% end %></li>
+      <li><%= link_to chats_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>コーチAI<% end %></li>
       <li><%= link_to menus_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>メニュー<% end %></li>
       <li><button data-action="click->sidemenu#toggle">閉じる</button></li>
     </ul>
@@ -73,11 +73,11 @@
     </style>
 
     <!-- ボタン（横並び） -->
-    <div class="flex justify-center gap-3 w-full">
-      <button data-action="click->game_timer#increaseMinute" class="text-zinc-700 text-3xl p-2">▲</button>
-      <button data-action="click->game_timer#decreaseMinute" class="text-zinc-700 text-3xl p-2">▼</button>
-      <button data-action="click->game_timer#increaseSecond" class="text-zinc-700 text-3xl p-2">▲</button>
-      <button data-action="click->game_timer#decreaseSecond" class="text-zinc-700 text-3xl p-2">▼</button>
+    <div class="flex justify-center gap-6 w-full">
+      <button data-action="click->game_timer#increaseMinute" class="text-zinc-700 text-4xl p-2">▲</button>
+      <button data-action="click->game_timer#decreaseMinute" class="text-zinc-700 text-4xl p-2 mr-8">▼</button>
+      <button data-action="click->game_timer#increaseSecond" class="text-zinc-700 text-4xl p-2">▲</button>
+      <button data-action="click->game_timer#decreaseSecond" class="text-zinc-700 text-4xl p-2">▼</button>
     </div>
   </div>
 
@@ -116,9 +116,9 @@
       <div class="flex justify-between w-full gap-4">
         <!-- Team A -->
         <div class="flex flex-col items-center w-1/2">
-          <div class="flex gap-2">
-            <button data-action="click->score#increaseTeamAScore" class="text-zinc-700 text-3xl p-1 z-10">▲</button>
-            <button data-action="click->score#decreaseTeamAScore" class="text-zinc-700 text-3xl p-1 z-10">▼</button>
+          <div class="flex gap-4">
+            <button data-action="click->score#increaseTeamAScore" class="text-zinc-700 text-4xl p-1 z-10">▲</button>
+            <button data-action="click->score#decreaseTeamAScore" class="text-zinc-700 text-4xl p-1 z-10">▼</button>
           </div>
           <div class="text-yellow-400 text-center font-mono text-[clamp(3.5rem,20vw,7rem)] font-bold cursor-pointer leading-none"
               data-score-target="teamAScore" data-action="click->score#increaseTeamAScore"
@@ -127,9 +127,9 @@
 
         <!-- Team B -->
         <div class="flex flex-col items-center w-1/2">
-          <div class="flex gap-2">
-            <button data-action="click->score#increaseTeamBScore" class="text-zinc-700 text-3xl p-1 z-10">▲</button>
-            <button data-action="click->score#decreaseTeamBScore" class="text-zinc-700 text-3xl p-1 z-10">▼</button>
+          <div class="flex gap-4">
+            <button data-action="click->score#increaseTeamBScore" class="text-zinc-700 text-4xl p-1 z-10">▲</button>
+            <button data-action="click->score#decreaseTeamBScore" class="text-zinc-700 text-4xl p-1 z-10">▼</button>
           </div>
           <div class="text-yellow-400 text-center font-mono text-[clamp(3.5rem,20vw,9rem)] font-bold cursor-pointer leading-none"
               data-score-target="teamBScore" data-action="click->score#increaseTeamBScore"
@@ -139,9 +139,9 @@
 
       <!-- ショットクロック -->
       <div class="flex flex-col items-center w-full">
-        <div class="flex gap-3">
-          <button data-action="click->shot_clock#increase" class="text-zinc-700 text-3xl p-1 z-10">▲</button>
-          <button data-action="click->shot_clock#decrease" class="text-zinc-700 text-3xl p-1 z-10">▼</button>
+        <div class="flex gap-6">
+          <button data-action="click->shot_clock#increase" class="text-zinc-700 text-4xl p-2 z-10">▲</button>
+          <button data-action="click->shot_clock#decrease" class="text-zinc-700 text-4xl p-2 z-10">▼</button>
         </div>
         <div class="text-red-500 text-[clamp(3rem,30vw,7rem)] cursor-pointer leading-none"
             data-shot_clock-target="time1"
@@ -149,9 +149,9 @@
           24
         </div>
         <div class="flex gap-2 mt-2">
-          <button data-action="click->shot_clock#setTwentyFour" class="px-3 py-1 bg-zinc-700 text-white rounded-md text-sm">24秒</button>
-          <button data-action="click->shot_clock#setFourteen" class="px-3 py-1 bg-zinc-700 text-white rounded-md text-sm">14秒</button>
-          <button data-action="click->shot_clock#setTimeout" class="px-3 py-1 bg-red-800 text-white rounded-md text-sm">TO</button>
+          <button data-action="click->shot_clock#setTwentyFour" class="px-4 py-1 bg-zinc-700 text-white rounded-md text-sm">24秒</button>
+          <button data-action="click->shot_clock#setFourteen" class="px-4 py-1 bg-zinc-700 text-white rounded-md text-sm">14秒</button>
+          <button data-action="click->shot_clock#setTimeout" class="px-4 py-1 bg-red-800 text-white rounded-md text-sm">TO</button>
         </div>
       </div>
     </div>
