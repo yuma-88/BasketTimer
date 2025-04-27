@@ -1,14 +1,20 @@
 <% content_for :title, "試合記録" %>
 
-<div class="w-full min-h-screen bg-zinc-800 pt-16">
+<div class="w-full min-h-screen bg-zinc-800 pt-16" data-controller="audio">
 
   <header class="fixed top-0 left-0 w-full z-50 bg-zinc-900 text-white py-4 border-b border-zinc-500">
     <div class="w-full flex justify-between items-center px-6">
       <h1 class="text-xl font-bold">試合記録</h1>
       <nav class="space-x-4">
-        <%= link_to "メニュー", menus_path, class: "hover:underline" %>
+        <%= link_to menus_path, class: "hover:text-zinc-300", data: { action: "click->audio#playSwichSound" } do %>
+          <i class="text-xl fa-solid fa-bars"></i>
+        <% end %>
         <% if user_signed_in? %>
-          <%= link_to "ログアウト", destroy_user_session_path, data: { "turbo-method": "delete", confirm: "ログアウトしますか？" }, class: "hover:underline text-red-400" %>
+          <%= link_to destroy_user_session_path, 
+              data: { turbo_method: :delete, turbo_confirm: "ログアウトしますか？", action: "click->audio#playSwichSound" },
+              class: "text-red-400 hover:underline" do %>
+            <i class="fa-solid fa-sign-out-alt"></i>
+          <% end %>
         <% end %>
       </nav>
     </div>
