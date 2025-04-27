@@ -21,3 +21,6 @@ application.register("sidemenu", SidemenuController);
 
 import AudioController from "./audio_controller";
 application.register("audio", AudioController);
+
+import ChatsController from "./chats_controller"
+application.register("chats", ChatsController)

@@ -1,0 +1,33 @@
+<% content_for :title, "コーチAI" %>
+
+<div class="min-h-[100svh] bg-zinc-600 p-6 pt-20" data-controller="audio chats">
+
+  <header class="fixed top-0 left-0 w-full z-50 bg-zinc-900 text-white py-4 border-b border-zinc-500">
+  <div class="w-full flex justify-between items-center px-6">
+    <h1 class="text-xl font-bold">コーチAI</h1>
+    <nav class="space-x-4">
+      <%= link_to timers_path, class: "text-orange-400 hover:text-orange-300", data: { action: "click->audio#playSwichSound" } do %>
+        <i class="text-xl fa-solid fa-stopwatch"></i>
+      <% end %>
+      <%= link_to menus_path, class: "hover:text-zinc-300", data: { action: "click->audio#playSwichSound" } do %>
+        <i class="text-xl fa-solid fa-bars"></i>
+      <% end %>
+    </nav>
+  </div>
+  </header>
+
+  <!-- チャットコンテナ -->
+  <div class="max-w-lg mx-auto mt-5 p-4 sm:p-6 bg-zinc-800 rounded-lg shadow-lg">
+    
+    <!-- メッセージ表示エリア（回答などが表示される領域）-->
+    <div id="response-container" class="flex flex-col h-96 bg-zinc-700 p-4 rounded-lg shadow-sm overflow-y-auto mb-4" data-chats-target="responseBox">
+      <!-- ボットの回答がここに追加されます -->
+    </div>
+
+    <!-- メッセージ入力フォーム（画面下部に固定）-->
+    <form id="chat-form" class="mt-4 flex items-center space-x-2" data-action="submit->chats#sendMessage">
+      <input type="text" id="input" placeholder="メッセージを入力..." required class="flex-1 p-3 border border-orange-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" data-chats-target="input">
+      <button type="submit" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 focus:outline-none">送信</button>
+    </form>
+  </div>
+</div>
