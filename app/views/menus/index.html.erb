@@ -1,21 +1,33 @@
 <% content_for :title, "メニュー" %>
 <div data-controller="audio" class="bg-black min-h-[100svh] flex items-center justify-center">
-  <div class="container mx-auto p-4">
+  <div class="fixed container mx-auto p-4">
     <div class="flex flex-col space-y-4">
-      <%= link_to timers_path, class: "bg-zinc-900 p-6 rounded-lg shadow-lg hover:bg-zinc-700 block text-center text-white border border-orange-500", data: { action: "click->audio#playSwichSound" } do %>
-        <span class="text-xl font-semibold">タイマー</span>
+      <%= link_to timers_path, class: "bg-zinc-900 p-6 rounded-lg shadow-lg hover:bg-zinc-700 block text-center text-white text-xl font-semibold border border-orange-500", data: { action: "click->audio#playSwichSound" } do %>
+        <div class="flex flex-col items-center space-y-2">
+          <i class="fa-solid fa-stopwatch text-3xl"></i>
+          <span>タイマー</span>
+        </div>
       <% end %>
 
-      <%= link_to settings_path, class: "bg-zinc-900 p-6 rounded-lg shadow-lg hover:bg-zinc-700 block text-center text-white border border-orange-500", data: { action: "click->audio#playSwichSound" } do %>
-        <span class="text-xl font-semibold">設定</span>
+      <%= link_to settings_path, class: "bg-zinc-900 p-6 rounded-lg shadow-lg hover:bg-zinc-700 block text-center text-white text-xl font-semibold border border-orange-500", data: { action: "click->audio#playSwichSound" } do %>
+        <div class="flex flex-col items-center space-y-2">
+          <i class="fa-solid fa-gear text-3xl"></i>
+          <span>設定</span>
+        </div>
       <% end %>
 
-      <%= link_to new_user_session_path, class: "bg-zinc-900 p-6 rounded-lg shadow-lg hover:bg-zinc-700 block text-center text-white border border-orange-500", data: { action: "click->audio#playSwichSound" } do %>
-        <span class="text-xl font-semibold">試合記録</span>
+      <%= link_to new_user_session_path, class: "bg-zinc-900 p-6 rounded-lg shadow-lg hover:bg-zinc-700 block text-center text-white text-xl font-semibold border border-orange-500", data: { action: "click->audio#playSwichSound" } do %>
+        <div class="flex flex-col items-center space-y-2">
+          <i class="fa-solid fa-file-lines text-3xl"></i>
+          <span>試合記録</span>
+        </div>
       <% end %>
 
-      <%= link_to rulegpts_path, class: "bg-zinc-900 p-6 rounded-lg shadow-lg hover:bg-zinc-700 block text-center text-white border border-orange-500", data: { action: "click->audio#playSwichSound" } do %>
-        <span class="text-xl font-semibold">ルール確認用GPT</span>
+      <%= link_to chats_path, class: "bg-zinc-900 p-6 rounded-lg shadow-lg hover:bg-zinc-700 block text-center text-white text-xl font-semibold border border-orange-500", data: { action: "click->audio#playSwichSound" } do %>
+        <div class="flex flex-col items-center space-y-2">
+          <i class="fa-solid fa-robot text-3xl"></i>
+          <span>コーチAI</span>
+        </div>
       <% end %>
     </div>
   </div>
