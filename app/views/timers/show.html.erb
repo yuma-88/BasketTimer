@@ -82,12 +82,12 @@
   </div>
 
   <!-- 試合時間と増減ボタン -->
-  <div class="flex flex-col items-center gap-2 w-full max-w-full">
+  <div class="flex flex-col items-center gap-0 w-full max-w-full">
     <!-- 増減ボタン -->
     <div class="hidden sm:flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 w-full relative">
-      <button data-action="click->game_timer#increaseMinute" class="text-zinc-700 text-4xl p-2">▲</button>
-      <button data-action="click->game_timer#decreaseMinute" class="text-zinc-700 text-4xl p-2">▼</button>
-      <select data-game_timer-target="select" class="bg-black text-yellow-400 text-2xl sm:text-3xl md:text-4xl text-center p-2 sm:p-3 md:p-4 rounded" title="ピリオド">
+      <button data-action="click->game_timer#increaseMinute" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▲</button>
+      <button data-action="click->game_timer#decreaseMinute" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▼</button>
+      <select data-game_timer-target="select" class="bg-black text-yellow-400 text-2xl mobile-landscape:text-2xl sm:text-3xl md:text-4xl text-center p-2 sm:p-3 md:p-4 rounded" title="ピリオド">
         <option>P1</option>
         <option>P2</option>
         <option>ハーフ</option>
@@ -95,13 +95,13 @@
         <option>P4</option>
         <option>インターバル</option>
       </select>
-      <button data-action="click->game_timer#increaseSecond" class="text-zinc-700 text-4xl p-2">▲</button>
-      <button data-action="click->game_timer#decreaseSecond" class="text-zinc-700 text-4xl p-2">▼</button>
+      <button data-action="click->game_timer#increaseSecond" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▲</button>
+      <button data-action="click->game_timer#decreaseSecond" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▼</button>
     </div>
 
     <!-- 試合時間（クリックでスタート・ストップ） -->
     <div class="text-white font-bold text-center font-mono tracking-wider cursor-pointer 
-            text-[clamp(3rem,25vw,30rem)] leading-none"
+            text-[clamp(3rem,25vw,30rem)] mobile-landscape:text-[10rem] leading-none mobile-landscape:-my-4"
          data-game_timer-target="time"
          data-action="click->game_timer#toggleTimer">
       10:00
@@ -109,7 +109,7 @@
   </div>
 
   <!-- スコア & ショットクロック（スマホは縦、PCは横） -->
-  <div class="w-full mt-6 px-4 max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-2xl xl:max-w-5xl">
+  <div class="w-full mt-6 px-4 max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-2xl xl:max-w-5xl mobile-landscape:max-w-xl">
     <!-- スマホ表示: スコア横並び、ショットクロック下 -->
     <div class="flex flex-col sm:hidden gap-4">
       <!-- スコア左右 -->
@@ -157,23 +157,23 @@
     </div>
 
     <!-- PC表示: 横並び -->
-    <div class="hidden sm:flex justify-between items-center w-full">
+    <div class="hidden sm:flex justify-between items-center w-full mobile-landscape:-mt-6">
       <!-- Team A -->
       <div class="flex flex-col items-center">
-        <div class="flex gap-4">
-          <button data-action="click->score#increaseTeamAScore" class="text-zinc-700 text-4xl p-2 z-10">▲</button>
-          <button data-action="click->score#decreaseTeamAScore" class="text-zinc-700 text-4xl p-2 z-10">▼</button>
+        <div class="flex gap-4 mobile-landscape:-my-2">
+          <button data-action="click->score#increaseTeamAScore" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2 z-10">▲</button>
+          <button data-action="click->score#decreaseTeamAScore" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2 mobile-landscape:mr-4 z-10">▼</button>
         </div>
-        <div class="text-yellow-400 text-center font-mono w-[150px] text-[clamp(3rem,20vw,20rem)] font-bold cursor-pointer leading-none"
+        <div class="text-yellow-400 text-center font-mono w-[150px] text-[clamp(3rem,20vw,20rem)] mobile-landscape:text-[8rem] font-bold cursor-pointer leading-none"
             data-score-target="teamAScore" data-action="click->score#increaseTeamAScore"
             style="direction: rtl; text-align: left;">0</div>
       </div>
 
       <!-- Shot Clock -->
       <div class="flex flex-col items-center mt-4">
-        <div class="flex gap-4">
-          <button data-action="click->shot_clock#increase" class="text-zinc-700 text-4xl p-2">▲</button>
-          <button data-action="click->shot_clock#decrease" class="text-zinc-700 text-4xl p-2">▼</button>
+        <div class="flex gap-4 mobile-landscape:-mt-12 mobile-landscape:-mb-4">
+          <button data-action="click->shot_clock#increase" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▲</button>
+          <button data-action="click->shot_clock#decrease" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▼</button>
         </div>
         <div class="text-red-500 text-[clamp(3rem,10vw,20rem)] cursor-pointer leading-none"
             data-shot_clock-target="time2"
@@ -189,12 +189,12 @@
 
       <!-- Team B -->
       <div class="flex flex-col items-center">
-        <div class="flex gap-4">
-          <button data-action="click->score#increaseTeamBScore" class="text-zinc-700 text-4xl p-2 z-10">▲</button>
-          <button data-action="click->score#decreaseTeamBScore" class="text-zinc-700 text-4xl p-2 z-10">▼</button>
+        <div class="flex gap-4 mobile-landscape:-my-2">
+          <button data-action="click->score#increaseTeamBScore" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2 mobile-landscape:ml-4 z-10">▲</button>
+          <button data-action="click->score#decreaseTeamBScore" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2 z-10">▼</button>
         </div>
-        <div class="text-yellow-400 text-center font-mono w-[150px] text-[clamp(3rem,20vw,20rem)] font-bold cursor-pointer leading-none"
-            data-score-target="teamBScore" data-action="click->score#increaseTeamBScore"
+        <div class="text-yellow-400 text-center font-mono w-[150px] text-[clamp(3rem,20vw,20rem)] mobile-landscape:text-[8rem] font-bold cursor-pointer leading-none"
+            data-score-target="teamBScore" data-action="click->score#increaseTeamBScore"$
             style="direction: ltr; text-align: right;">0</div>
       </div>
     </div>
