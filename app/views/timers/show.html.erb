@@ -1,6 +1,6 @@
 <% content_for :title, "タイマー" %>
-<div data-controller="game_timer score shot_clock sidemenu audio"
-     class="fixed w-full min-h-[100svh] bg-black text-white flex flex-col items-center justify-center px-4 sm:px-8 md:px-16 lg:px-20 mx-auto pb-14 select-none"
+<div data-controller="game_timer score shot_clock sidemenu audio modal"
+     class="fixed w-full min-h-[100svh] top-0 left-0 right-0 bottom-0 bg-black text-white flex flex-col items-center justify-center px-4 sm:px-8 md:px-16 lg:px-20 mx-auto pb-14 select-none"
      style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
 
   <!-- 左サイドバー -->
@@ -22,6 +22,7 @@
   <!-- サイドメニュー -->
   <div data-sidemenu-target="menu" class="fixed left-0 top-0 h-full w-48 bg-zinc-700 text-white py-4 px-6 transform -translate-x-full opacity-0 pointer-events-none transition-transform duration-300 ease-in-out z-50">
     <ul class="flex flex-col gap-4 text-lg text-left"> <!-- text-left を追加 -->
+      <li class="hidden mobile-landscape:hidden md:flex"><button data-action="click->modal#open">操作ガイド</button></li>
       <li><button data-action="click->game_timer#resetTime">タイマーリセット</button></li>
       <li><button data-action="click->score#resetScores">スコアリセット</button></li>
       <li><%= link_to settings_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>設定<% end %></li>
@@ -218,5 +219,53 @@
     <button class="text-white text-xl" data-action="click->score#swapScores">
       <i class="fas fa-exchange-alt"></i>
     </button>
+  </div>
+
+  <!-- モーダルオーバーレイ -->
+  <div data-modal-target="overlay" 
+      class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center px-4
+            transition-opacity duration-300 ease-out opacity-0"
+      data-action="click->modal#close">
+    <div class="bg-zinc-700 border border-orange-500 text-white p-6 rounded-lg w-full max-w-md shadow-lg relative
+                transform scale-95 opacity-0 transition-all duration-300 ease-out"
+        data-modal-target="modalBox">
+      <button class="absolute top-2 right-3 text-white hover:text-gray-400 text-2xl" data-action="click->modal#close">&times;</button>
+      <h2 class="text-2xl font-bold mb-4">操作ガイド</h2>
+      <ul class="space-y-2 text-lg">
+        <li class="flex">
+          <span class="w-44">「Enter」・・・・・</span><span>タイマー開始・停止</span>
+        </li>
+        <li class="flex">
+          <span class="w-44">「T」・・・・・・・</span><span>タイマーリセット</span>
+        </li>
+        <li class="flex">
+          <span class="w-44">「S」・・・・・・・</span><span>スコアリセット</span>
+        </li>
+        <li class="flex">
+          <span class="w-44">「R」・・・・・・・</span><span>ゲームリセット</span>
+        </li>
+        <li class="flex">
+          <span class="w-44">「C」・・・・・・・</span><span>コートチェンジ</span>
+        </li>
+        <li class="flex">
+          <span class="w-44">「M」・・・・・・・</span><span>メニュー表示</span>
+        </li>
+        <li class="flex">
+          <span class="w-44">「space」・・・・・</span><span>ブザー</span>
+        </li>
+        <li class="flex">
+          <span class="w-44">「矢印キー」・・・・</span><span>スコア選択・増減</span>
+        </li>
+        <li class="flex">
+          <span class="w-44">「1」～「4」・・・・</span><span>ピリオド</span>
+        </li>
+        <li class="flex">
+          <span class="w-44">「5」or「H」・・・・</span><span>ハーフタイム</span>
+        </li>
+        <li class="flex">
+          <span class="w-44">「6」or「I」・・・・</span><span>インターバル</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

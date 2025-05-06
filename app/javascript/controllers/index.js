@@ -24,3 +24,6 @@ application.register("audio", AudioController);
 
 import ChatsController from "./chats_controller"
 application.register("chats", ChatsController)
+
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
