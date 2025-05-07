@@ -51,6 +51,7 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
   config.hosts << "b-timer.jp"
+  config.hosts << "www.b-timer.jp"
   config.hosts << "baskettimer.onrender.com"
 
   # Skip http-to-https redirect for the default health check endpoint.
