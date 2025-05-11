@@ -150,53 +150,53 @@
           24
         </div>
         <div class="flex gap-2 mt-2">
-          <button data-action="click->shot_clock#setTwentyFour" class="px-4 py-1 bg-zinc-700 text-white rounded-md text-sm">24秒</button>
-          <button data-action="click->shot_clock#setFourteen" class="px-4 py-1 bg-zinc-700 text-white rounded-md text-sm">14秒</button>
-          <button data-action="click->shot_clock#setTimeout" class="px-4 py-1 bg-red-800 text-white rounded-md text-sm">TO</button>
+          <button data-action="click->shot_clock#setTwentyFour" class="px-4 py-1 bg-zinc-700 text-white rounded-md text-sm">２４</button>
+          <button data-action="click->shot_clock#setFourteen" class="px-4 py-1 bg-zinc-700 text-white rounded-md text-sm">１４</button>
+          <button data-action="click->shot_clock#setTimeout" class="px-4 py-1 bg-red-800 text-white rounded-md text-sm">ＴＯ</button>
         </div>
       </div>
     </div>
 
     <!-- PC表示: 横並び -->
-    <div class="hidden sm:flex justify-between items-center w-full mobile-landscape:-mt-6">
+    <div class="hidden sm:flex justify-between items-center w-full">
       <!-- Team A -->
       <div class="flex flex-col items-center">
-        <div class="flex gap-4 mobile-landscape:-my-2">
+        <div class="flex gap-4 sm:gap-8 mobile-landscape:-my-4">
           <button data-action="click->score#increaseTeamAScore" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2 z-10">▲</button>
-          <button data-action="click->score#decreaseTeamAScore" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2 mobile-landscape:mr-4 z-10">▼</button>
+          <button data-action="click->score#decreaseTeamAScore" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2 mobile-landscape:-mr-3 z-10">▼</button>
         </div>
-        <div class="text-yellow-400 text-center font-mono w-[150px] text-[clamp(3rem,20vw,20rem)] mobile-landscape:text-[8rem] font-bold cursor-pointer leading-none"
+        <div class="text-yellow-400 text-center font-mono w-[100px] mobile-landscape:w-[150px] sm:w-[100px] md:w-[150px] lg:w-[230px] text-[clamp(3rem,20vw,20rem)] mobile-landscape:text-[8rem] font-bold cursor-pointer leading-none"
             data-score-target="teamAScore" data-action="click->score#increaseTeamAScore"
-            style="direction: rtl; text-align: left;">0</div>
+            style="direction: rtl; text-align: right;">0</div>
       </div>
 
       <!-- Shot Clock -->
-      <div class="flex flex-col items-center mt-4">
-        <div class="flex gap-4 mobile-landscape:-mt-12 mobile-landscape:-mb-4">
+      <div class="flex flex-col items-center mx-auto mt-4">
+        <div class="flex gap-4 sm:gap-8 mobile-landscape:-mt-12 mobile-landscape:-mb-4">
           <button data-action="click->shot_clock#increase" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▲</button>
           <button data-action="click->shot_clock#decrease" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▼</button>
         </div>
-        <div class="text-red-500 text-[clamp(3rem,10vw,20rem)] cursor-pointer leading-none"
+        <div class="text-red-500 text-[clamp(3rem,10vw,20rem)] cursor-pointer leading-none mt-2"
             data-shot_clock-target="time2"
             data-action="click->shot_clock#toggleShotClock">
           24
         </div>
-        <div class="flex gap-2 mt-2">
-          <button data-action="click->shot_clock#setTwentyFour" class="px-3 py-1 bg-zinc-700 text-white rounded-md text-sm">24秒</button>
-          <button data-action="click->shot_clock#setFourteen" class="px-3 py-1 bg-zinc-700 text-white rounded-md text-sm">14秒</button>
-          <button data-action="click->shot_clock#setTimeout" class="px-3 py-1 bg-red-800 text-white rounded-md text-sm">TO</button>
+        <div class="flex gap-2 md:gap-4 mt-1">
+          <button data-action="click->shot_clock#setTwentyFour" class="px-3 py-1 lg:px-4 md:py-3 bg-zinc-800 text-white rounded-md text-sm md:text-base">２４</button>
+          <button data-action="click->shot_clock#setFourteen" class="px-3 py-1 lg:px-4 bg-zinc-800 text-white rounded-md text-sm md:text-base">１４</button>
+          <button data-action="click->shot_clock#setTimeout" class="px-3 py-1 lg:px-4 bg-red-800 text-white rounded-md text-sm md:text-base">ＴＯ</button>
         </div>
       </div>
 
       <!-- Team B -->
       <div class="flex flex-col items-center">
-        <div class="flex gap-4 mobile-landscape:-my-2">
-          <button data-action="click->score#increaseTeamBScore" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2 mobile-landscape:ml-4 z-10">▲</button>
+        <div class="flex gap-4 sm:gap-8 mobile-landscape:-my-4">
+          <button data-action="click->score#increaseTeamBScore" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2 mobile-landscape:-ml-3 z-10">▲</button>
           <button data-action="click->score#decreaseTeamBScore" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2 z-10">▼</button>
         </div>
-        <div class="text-yellow-400 text-center font-mono w-[150px] text-[clamp(3rem,20vw,20rem)] mobile-landscape:text-[8rem] font-bold cursor-pointer leading-none"
+        <div class="text-yellow-400 text-center font-mono w-[80px] mobile-landscape:w-[150px] sm:w-[100px] md:w-[150px] lg:w-[230px] text-[clamp(3rem,20vw,20rem)] mobile-landscape:text-[8rem] font-bold cursor-pointer leading-none"
             data-score-target="teamBScore" data-action="click->score#increaseTeamBScore"$
-            style="direction: ltr; text-align: right;">0</div>
+            style="direction: ltr; text-align: left;">0</div>
       </div>
     </div>
   </div>
