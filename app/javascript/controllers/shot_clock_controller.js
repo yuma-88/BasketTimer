@@ -10,6 +10,7 @@ export default class extends Controller {
   connect() {
     this.runningValue = false;
     this.secondsValue = 24.0; // 初期値を24.0秒に設定
+    this.originalSeconds = null;
     this.timer = null;
     this.updateDisplay();
   }
@@ -44,6 +45,13 @@ export default class extends Controller {
       } else {
         this.stop();
         this.playEndSound();
+
+        if (this.originalSeconds !== null) {
+          this.secondsValue = this.originalSeconds; // ← 元の秒数に戻す
+          this.originalSeconds = null;
+          this.updateDisplay();
+        }
+        
         const gameTimerController = this.application.controllers.find(controller => controller.identifier === 'game_timer');
         if (gameTimerController) {
           gameTimerController.stop();
@@ -92,6 +100,7 @@ export default class extends Controller {
 
   setTimeout() {
     this.stop();
+    this.originalSeconds = this.secondsValue;
     this.secondsValue = 60.0; // 60秒に変更
     this.updateDisplay();
     this.start();
