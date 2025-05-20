@@ -132,11 +132,16 @@ export default class extends Controller {
   // ========= 操作系メソッド ===========
 
   playBuzzerSound() {
-    this.playSound("buzzer", { loop: true });
+    if (this.isBuzzerPlaying) return; // 既に鳴っている場合は再度鳴らさない
+    this.isBuzzerPlaying = true;  // ブザーが鳴っている状態に設定
+    this.playSound("buzzer", { loop: true }); // ループを有効にして、鳴り続けるように
   }
 
   stopBuzzerSound() {
-    this.stopSound("buzzer");
+    if (this.isBuzzerPlaying) {
+      this.stopSound("buzzer");  // ブザーを停止
+      this.isBuzzerPlaying = false;  // ブザーが止まった状態に設定
+    }
   }
 
   playToggleSound() {
@@ -163,7 +168,12 @@ export default class extends Controller {
 
   playCountdownSound(seconds) {
     if (!this.countdownVoice) return;
-    this.playSound(`countdown_${seconds}`);
+  
+    const soundName = `countdown_${seconds}`;
+    if (this.audioBuffers[soundName]) {
+      this.playSound(soundName);
+    }
+    // 音声が存在しなくても何も表示せずに処理を終了
   }
 
   // ========= キー操作 ===========
