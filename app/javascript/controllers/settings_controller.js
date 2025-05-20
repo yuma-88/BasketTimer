@@ -121,7 +121,11 @@ export default class extends Controller {
     }
 
     window.dispatchEvent(new CustomEvent("audio:setting-changed", {
-      detail: { enableAudio: enableAudio }
+      detail: {
+        enableAudio: enableAudio,
+        countdownVoice: this.countdownVoiceTarget.checked,
+        memberChangeVoice: this.memberChangeVoiceTarget.checked
+      }
     }));
   }
 
