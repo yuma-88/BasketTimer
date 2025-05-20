@@ -11,6 +11,7 @@ export default class extends Controller {
     this.runningValue = false;
     this.secondsValue = 24.0; // 初期値を24.0秒に設定
     this.originalSeconds = null;
+    this.autoResetTo24 = false;
     this.timer = null;
     this.updateDisplay();
   }
@@ -40,14 +41,20 @@ export default class extends Controller {
     this.runningValue = true;
     this.timer = setInterval(() => {
       if (this.secondsValue > 0) {
-        this.secondsValue -= 0.1; // 0.1秒ずつ減少
+        this.secondsValue -= 0.1;
         this.updateDisplay();
       } else {
         this.stop();
         this.playEndSound();
-
+      
+        if (this.autoResetTo24) {
+          this.secondsValue = 24.0;         // ← 自動で24秒に戻す
+          this.updateDisplay();
+          this.autoResetTo24 = false;       // ← フラグをリセット
+        }
+      
         if (this.originalSeconds !== null) {
-          this.secondsValue = this.originalSeconds; // ← 元の秒数に戻す
+          this.secondsValue = this.originalSeconds;
           this.originalSeconds = null;
           this.updateDisplay();
         }
@@ -75,33 +82,32 @@ export default class extends Controller {
   }
 
   setTwentyFour() {
-    if (!this.runningValue) {
-      this.secondsValue = 24.0; // 24.0秒に設定
-      this.updateDisplay();
-    } else {
-      this.secondsValue = 24.0; // 24.0秒に設定
-      this.updateDisplay();
-      this.start();
-    }
+    this.autoResetTo24 = true; // ← 追加
+    this.originalSeconds = null;
+    this.secondsValue = 24.0;
+    this.updateDisplay();
+    if (this.runningValue) this.start();
     this.playSwichSound();
   }
-
+  
   setFourteen() {
-    if (!this.runningValue) {
-      this.secondsValue = 14.0;
-      this.updateDisplay();
-    } else {
-      this.secondsValue = 14.0;
-      this.updateDisplay();
-      this.start();
-    }
+    this.autoResetTo24 = true; // ← 追加
+    this.originalSeconds = null;
+    this.secondsValue = 14.0;
+    this.updateDisplay();
+    if (this.runningValue) this.start();
     this.playSwichSound();
   }
 
   setTimeout() {
     this.stop();
-    this.originalSeconds = this.secondsValue;
-    this.secondsValue = 60.0; // 60秒に変更
+  
+    // すでに originalSeconds がセットされているなら上書きしない
+    if (this.originalSeconds === null) {
+      this.originalSeconds = this.secondsValue;
+    }
+  
+    this.secondsValue = 60.0; // タイムアウトの秒数
     this.updateDisplay();
     this.start();
     this.playSwichSound();
