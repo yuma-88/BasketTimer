@@ -259,7 +259,7 @@ export default class extends Controller {
       setTimeout(() => {
         this.playMemberChangeBuzzerSound();
         setTimeout(() => this.playMemberChangeSound(), 1000);
-      }, 1300);
+      }, 1000);
     }
   }
 
