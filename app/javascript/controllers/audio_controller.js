@@ -167,8 +167,16 @@ export default class extends Controller {
   }
 
   playCountdownSound(seconds) {
+    // 設定されている音声が無効の場合は何もしない
     if (!this.countdownVoice) return;
-    this.playSound(`countdown_${seconds}`);
+  
+    // 再生する秒数に対応する音声ファイルが存在するかチェック
+    const soundName = `countdown_${seconds}`;
+    if (this.audioBuffers[soundName]) {
+      this.playSound(soundName);
+    } else {
+      console.warn(`Countdown sound for ${seconds} seconds is not available.`);
+    }
   }
 
   // ========= キー操作 ===========
