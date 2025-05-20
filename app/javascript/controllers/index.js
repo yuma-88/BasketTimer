@@ -27,3 +27,6 @@ application.register("chats", ChatsController)
 
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)
+
+import TouchProtectionController from "./touch_protection_controller"
+application.register("touch-protection", TouchProtectionController)
