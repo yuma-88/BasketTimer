@@ -132,11 +132,16 @@ export default class extends Controller {
   // ========= 操作系メソッド ===========
 
   playBuzzerSound() {
-    this.playSound("buzzer", { loop: true });
+    if (this.isBuzzerPlaying) return; // 既に鳴っている場合は再度鳴らさない
+    this.isBuzzerPlaying = true;  // ブザーが鳴っている状態に設定
+    this.playSound("buzzer", { loop: true }); // ループを有効にして、鳴り続けるように
   }
 
   stopBuzzerSound() {
-    this.stopSound("buzzer");
+    if (this.isBuzzerPlaying) {
+      this.stopSound("buzzer");  // ブザーを停止
+      this.isBuzzerPlaying = false;  // ブザーが止まった状態に設定
+    }
   }
 
   playToggleSound() {
