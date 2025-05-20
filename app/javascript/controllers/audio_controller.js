@@ -4,89 +4,169 @@ export default class extends Controller {
   static targets = [];
 
   connect() {
-    this.initializeAudio();
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    this.audioBuffers = {};
+    this.loopingSources = {};
     this.loadAudioSettings();
 
-    document.addEventListener("keydown", this.handleKeydown.bind(this));
-    document.addEventListener("keyup", this.handleKeyup.bind(this));
+    this.boundKeydown = this.handleKeydown.bind(this);
+    this.boundKeyup = this.handleKeyup.bind(this);
+    this.boundAudioSettingChanged = this.handleAudioSettingChanged.bind(this);
+    this.boundUserInteraction = this.unlockAudioContext.bind(this);
 
-    // カスタムイベントでリアルタイム切り替えを受け取る
-    window.addEventListener("audio:setting-changed", this.handleAudioSettingChanged.bind(this));
+    document.addEventListener("keydown", this.boundKeydown);
+    document.addEventListener("keyup", this.boundKeyup);
+    window.addEventListener("audio:setting-changed", this.boundAudioSettingChanged);
+    document.addEventListener("touchstart", this.boundUserInteraction);
+    document.addEventListener("mousedown", this.boundUserInteraction);
+
+    this.initializeAudio(); // 音声読み込みは最後
   }
 
   disconnect() {
-    document.removeEventListener("keydown", this.handleKeydown.bind(this));
-    document.removeEventListener("keyup", this.handleKeyup.bind(this));
-    window.removeEventListener("audio:setting-changed", this.handleAudioSettingChanged.bind(this));
+    document.removeEventListener("keydown", this.boundKeydown);
+    document.removeEventListener("keyup", this.boundKeyup);
+    window.removeEventListener("audio:setting-changed", this.boundAudioSettingChanged);
+    document.removeEventListener("touchstart", this.boundUserInteraction);
+    document.removeEventListener("mousedown", this.boundUserInteraction);
   }
 
-  initializeAudio() {
-    this.endSound = new Audio("/sounds/end.mp3");
-    this.buzzerSound = new Audio("/sounds/buzzer.mp3");
-    this.memberChangeSound = new Audio("/sounds/member_change.mp3");
-    this.clickSound = new Audio("/sounds/toggle.mp3");
-    this.swichSound = new Audio("/sounds/swich.mp3");
+  async unlockAudioContext() {
+    if (this.audioContext.state === "suspended") {
+      await this.audioContext.resume();
+    }
+    document.removeEventListener("touchstart", this.boundUserInteraction);
+    document.removeEventListener("mousedown", this.boundUserInteraction);
+  }
 
-    this.countdownSounds = {
-      60: new Audio("/sounds/countdown_60.mp3"),
-      30: new Audio("/sounds/countdown_30.mp3"),
-      15: new Audio("/sounds/countdown_15.mp3"),
-      10: new Audio("/sounds/countdown_10.mp3"),
-      9: new Audio("/sounds/countdown_9.mp3"),
-      8: new Audio("/sounds/countdown_8.mp3"),
-      7: new Audio("/sounds/countdown_7.mp3"),
-      6: new Audio("/sounds/countdown_6.mp3"),
-      5: new Audio("/sounds/countdown_5.mp3"),
-      4: new Audio("/sounds/countdown_4.mp3"),
-      3: new Audio("/sounds/countdown_3.mp3"),
-      2: new Audio("/sounds/countdown_2.mp3"),
-      1: new Audio("/sounds/countdown_1.mp3"),
+  async initializeAudio() {
+    const soundFiles = {
+      end: "/sounds/end.mp3",
+      buzzer: "/sounds/buzzer.mp3",
+      memberChange: "/sounds/member_change.mp3",
+      toggle: "/sounds/toggle.mp3",
+      swich: "/sounds/swich.mp3",
     };
+
+    for (let i = 60; i >= 1; i--) {
+      soundFiles[`countdown_${i}`] = `/sounds/countdown_${i}.mp3`;
+    }
+
+    const promises = Object.entries(soundFiles).map(([key, url]) =>
+      this.loadAudioBuffer(key, url)
+    );
+
+    await Promise.all(promises);
+  }
+
+  async loadAudioBuffer(name, url) {
+    try {
+      const response = await fetch(url);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+      this.audioBuffers[name] = audioBuffer;
+    } catch (error) {
+      console.warn(`Failed to load sound: ${url}`, error);
+    }
   }
 
   loadAudioSettings() {
     const settings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
-    const enableAudio = settings.enableAudio ?? true;
-    const countdownVoice = settings.countdownVoice ?? true;
+    this.enableAudio = settings.enableAudio ?? true;
+    this.countdownVoice = settings.countdownVoice ?? true;
+    this.memberChangeVoice = settings.memberChangeVoice ?? false;
+  }
+
+  handleAudioSettingChanged(event) {
+    const { enableAudio, countdownVoice, memberChangeVoice } = event.detail;
+
+    this.enableAudio = enableAudio;
+    this.countdownVoice = countdownVoice;
+    this.memberChangeVoice = memberChangeVoice;
 
     if (!enableAudio) {
-      this.disableAudio();
+      this.stopAllSounds();
+    } else {
+      this.initializeAudio(); // 再読み込み
     }
+  }
 
-    if (!countdownVoice) {
-      this.disableCountdownVoice();
+  playSound(name, options = {}) {
+    if (!this.enableAudio) return;
+
+    const buffer = this.audioBuffers[name];
+    if (!buffer) return;
+
+    const source = this.audioContext.createBufferSource();
+    source.buffer = buffer;
+
+    const gainNode = this.audioContext.createGain();
+    gainNode.gain.value = options.volume ?? 1.0;
+
+    source.connect(gainNode).connect(this.audioContext.destination);
+    source.loop = options.loop ?? false;
+    source.start(0);
+
+    if (options.loop) {
+      this.loopingSources[name] = source;
+    }
+  }
+
+  stopSound(name) {
+    if (this.loopingSources[name]) {
+      try {
+        this.loopingSources[name].stop();
+      } catch (e) {
+        console.error("Failed to stop sound:", name, e);
+      }
+      delete this.loopingSources[name];
     }
   }
 
   stopAllSounds() {
-    this.playingAudios.forEach(audio => {
-      audio.pause();
-      audio.currentTime = 0;
-    });
-    this.playingAudios = [];
-  }
-
-  handleAudioSettingChanged(event) {
-    const { enableAudio } = event.detail;
-
-    if (enableAudio) {
-      this.initializeAudio();
-    } else {
-      this.disableAudio();
+    for (const name in this.loopingSources) {
+      this.stopSound(name);
     }
   }
 
-  disableAudio() {
-    this.endSound = null;
-    this.memberChangeSound = null;
-    this.clickSound = null;
-    this.swichSound = null;
-    this.countdownSounds = {};
+  // ========= 操作系メソッド ===========
+
+  playBuzzerSound() {
+    this.playSound("buzzer", { loop: true });
   }
 
-  disableCountdownVoice() {
-    this.countdownSounds = {};
+  stopBuzzerSound() {
+    this.stopSound("buzzer");
   }
+
+  playToggleSound() {
+    this.playSound("toggle", { volume: 0.3 });
+  }
+
+  playSwichSound() {
+    this.playSound("swich", { volume: 0.3 });
+  }
+
+  playEndSound() {
+    this.playSound("end");
+  }
+
+  playMemberChangeSound() {
+    if (this.memberChangeVoice) {
+      this.playSound("memberChange");
+    }
+  }
+
+  playMemberChangeBuzzerSound() {
+    this.playSound("buzzer");
+  }
+
+  playCountdownSound(seconds) {
+    if (!this.countdownVoice) return;
+    this.playSound(`countdown_${seconds}`);
+  }
+
+  // ========= キー操作 ===========
 
   handleKeydown(event) {
     if (event.key === " ") {
@@ -97,61 +177,6 @@ export default class extends Controller {
   handleKeyup(event) {
     if (event.key === " ") {
       this.stopBuzzerSound();
-    }
-  }
-
-  playSwichSound() {
-    if (this.swichSound) {
-      const s = new Audio("/sounds/swich.mp3");
-      s.volume = 0.3;
-      s.play();
-    }
-  }
-
-  playToggleSound() {
-    if (this.clickSound) {
-      const t = new Audio("/sounds/toggle.mp3");
-      t.volume = 0.3;
-      t.play();
-    }
-  }
-
-  playBuzzerSound() {
-    this.buzzerSound.loop = true; // ループ再生を設定
-    if (this.buzzerSound.paused) {
-      this.buzzerSound.play();
-    }
-  }
-
-  stopBuzzerSound() {
-    if (this.buzzerSound && !this.buzzerSound.paused) {
-      this.buzzerSound.pause();
-      this.buzzerSound.currentTime = 0;
-    }
-  }
-
-  playMemberChangeBuzzerSound() {
-    if (this.buzzerSound) {
-      this.buzzerSound.play();
-    }
-  }
-
-  playEndSound() {
-    if (this.endSound) {
-      this.endSound.play();
-    }
-  }
-
-  playCountdownSound(seconds) {
-    const sound = this.countdownSounds[seconds];
-    if (sound) {
-      sound.play();
-    }
-  }
-
-  playMemberChangeSound() {
-    if (this.memberChangeSound) {
-      this.memberChangeSound.play();
     }
   }
 }
