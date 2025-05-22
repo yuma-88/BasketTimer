@@ -25,23 +25,5 @@
 
   <body>
     <%= yield %>
-
-    <!-- JavaScript追加: ダブルタップズーム防止 -->
-    <script>
-      // ピンチズーム（2本指）を防止
-      document.addEventListener('gesturestart', function (e) {
-        e.preventDefault();
-      }, { passive: false });
-
-      // ダブルタップズームを防止
-      let lastTouchEnd = 0;
-      document.addEventListener('touchend', function (event) {
-        const now = new Date().getTime();
-        if (now - lastTouchEnd <= 50) {
-          event.preventDefault();
-        }
-        lastTouchEnd = now;
-      }, { passive: false });
-    </script>
   </body>
 </html>

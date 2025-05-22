@@ -1,5 +1,5 @@
 <% content_for :title, "タイマー" %>
-<div data-controller="game_timer score shot_clock sidemenu audio modal touch-protection"
+<div data-controller="game-timer score shot-clock sidemenu audio modal touch-protection"
      class="fixed w-full min-h-[100svh] top-0 left-0 right-0 bottom-0 bg-black text-white flex flex-col items-center justify-center px-4 sm:px-8 md:px-16 lg:px-20 mx-auto pb-14 sm:pb-0 select-none"
      style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
 
@@ -15,7 +15,7 @@
 
     <!-- 下半分 -->
     <div class="flex-grow flex items-center justify-center">
-      <button class="text-white text-2xl w-full h-full" data-action="click->game_timer#resetAll" title="ゲームリセット"><i class="fas fa-redo"></i></button>
+      <button class="text-white text-2xl w-full h-full" data-action="click->game-timer#resetAll" title="ゲームリセット"><i class="fas fa-redo"></i></button>
     </div>
   </div>
 
@@ -23,7 +23,7 @@
   <div data-sidemenu-target="menu" class="fixed left-0 top-0 h-full w-48 bg-zinc-700 text-white py-4 px-6 transform -translate-x-full opacity-0 pointer-events-none transition-transform duration-300 ease-in-out z-50">
     <ul class="flex flex-col gap-4 text-lg text-left"> <!-- text-left を追加 -->
       <li class="hidden mobile-landscape:hidden md:flex"><button data-action="click->modal#open">操作ガイド</button></li>
-      <li><button data-action="click->game_timer#resetTime">タイマーリセット</button></li>
+      <li><button data-action="click->game-timer#resetTime">タイマーリセット</button></li>
       <li><button data-action="click->score#resetScores">スコアリセット</button></li>
       <li><%= link_to settings_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>設定<% end %></li>
       <li><%= link_to new_user_session_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>試合記録<% end %></li>
@@ -58,7 +58,7 @@
   <!-- スマホ表示：selectを上に、その下にボタンを横並び -->
   <div class="w-full sm:hidden flex flex-col items-center gap-2">
     <!-- セレクトボックス -->
-    <select data-game_timer-target="select" class="w-full bg-black text-yellow-400 text-2xl text-center p-2 rounded">
+    <select data-game-timer-target="select" class="w-full bg-black text-yellow-400 text-2xl text-center p-2 rounded">
       <option>P1</option>
       <option>P2</option>
       <option>ハーフ</option>
@@ -75,10 +75,10 @@
 
     <!-- ボタン（横並び） -->
     <div class="flex justify-center gap-6 w-full">
-      <button data-action="click->game_timer#increaseMinute" class="text-zinc-700 text-4xl p-2">▲</button>
-      <button data-action="click->game_timer#decreaseMinute" class="text-zinc-700 text-4xl p-2 mr-8">▼</button>
-      <button data-action="click->game_timer#increaseSecond" class="text-zinc-700 text-4xl p-2">▲</button>
-      <button data-action="click->game_timer#decreaseSecond" class="text-zinc-700 text-4xl p-2">▼</button>
+      <button data-action="click->game-timer#increaseMinute" class="text-zinc-700 text-4xl p-2">▲</button>
+      <button data-action="click->game-timer#decreaseMinute" class="text-zinc-700 text-4xl p-2 mr-8">▼</button>
+      <button data-action="click->game-timer#increaseSecond" class="text-zinc-700 text-4xl p-2">▲</button>
+      <button data-action="click->game-timer#decreaseSecond" class="text-zinc-700 text-4xl p-2">▼</button>
     </div>
   </div>
 
@@ -86,9 +86,9 @@
   <div class="flex flex-col items-center gap-0 w-full max-w-full">
     <!-- 増減ボタン -->
     <div class="hidden sm:flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 w-full relative">
-      <button data-action="click->game_timer#increaseMinute" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▲</button>
-      <button data-action="click->game_timer#decreaseMinute" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▼</button>
-      <select data-game_timer-target="select" class="bg-black text-yellow-400 text-2xl mobile-landscape:text-2xl sm:text-3xl md:text-4xl text-center p-2 sm:p-3 md:p-4 rounded" title="ピリオド">
+      <button data-action="click->game-timer#increaseMinute" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▲</button>
+      <button data-action="click->game-timer#decreaseMinute" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▼</button>
+      <select data-game-timer-target="select" class="bg-black text-yellow-400 text-2xl mobile-landscape:text-2xl sm:text-3xl md:text-4xl text-center p-2 sm:p-3 md:p-4 rounded" title="ピリオド">
         <option>P1</option>
         <option>P2</option>
         <option>ハーフ</option>
@@ -96,15 +96,15 @@
         <option>P4</option>
         <option>インターバル</option>
       </select>
-      <button data-action="click->game_timer#increaseSecond" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▲</button>
-      <button data-action="click->game_timer#decreaseSecond" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▼</button>
+      <button data-action="click->game-timer#increaseSecond" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▲</button>
+      <button data-action="click->game-timer#decreaseSecond" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▼</button>
     </div>
 
     <!-- 試合時間（クリックでスタート・ストップ） -->
     <div class="text-white font-bold text-center font-mono tracking-wider cursor-pointer 
             text-[clamp(3rem,25vw,30rem)] mobile-landscape:text-[10rem] leading-none mobile-landscape:-my-4"
-         data-game_timer-target="time"
-         data-action="click->game_timer#toggleTimer">
+         data-game-timer-target="time"
+         data-action="click->game-timer#toggleTimer">
       10:00
     </div>
   </div>
@@ -141,18 +141,18 @@
       <!-- ショットクロック -->
       <div class="flex flex-col items-center w-full">
         <div class="flex gap-6">
-          <button data-action="click->shot_clock#increase" class="text-zinc-700 text-4xl p-2 z-10">▲</button>
-          <button data-action="click->shot_clock#decrease" class="text-zinc-700 text-4xl p-2 z-10">▼</button>
+          <button data-action="click->shot-clock#increase" class="text-zinc-700 text-4xl p-2 z-10">▲</button>
+          <button data-action="click->shot-clock#decrease" class="text-zinc-700 text-4xl p-2 z-10">▼</button>
         </div>
         <div class="text-red-500 text-[clamp(3rem,30vw,7rem)] cursor-pointer leading-none"
-            data-shot_clock-target="time1"
-            data-action="click->shot_clock#toggleShotClock">
+            data-shot-clock-target="time1"
+            data-action="click->shot-clock#toggleShotClock">
           24
         </div>
         <div class="flex gap-2 mt-2">
-          <button data-action="click->shot_clock#setTwentyFour" class="px-4 py-1 bg-zinc-700 text-white rounded-md text-sm">２４</button>
-          <button data-action="click->shot_clock#setFourteen" class="px-4 py-1 bg-zinc-700 text-white rounded-md text-sm">１４</button>
-          <button data-action="click->shot_clock#setTimeout" class="px-4 py-1 bg-red-800 text-white rounded-md text-sm">ＴＯ</button>
+          <button data-action="click->shot-clock#setTwentyFour" class="px-4 py-1 bg-zinc-700 text-white rounded-md text-sm">２４</button>
+          <button data-action="click->shot-clock#setFourteen" class="px-4 py-1 bg-zinc-700 text-white rounded-md text-sm">１４</button>
+          <button data-action="click->shot-clock#setTimeout" class="px-4 py-1 bg-red-800 text-white rounded-md text-sm">ＴＯ</button>
         </div>
       </div>
     </div>
@@ -173,18 +173,18 @@
       <!-- Shot Clock -->
       <div class="flex flex-col items-center mx-auto mt-4">
         <div class="flex gap-4 sm:gap-8 mobile-landscape:-mt-12 mobile-landscape:-mb-4">
-          <button data-action="click->shot_clock#increase" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▲</button>
-          <button data-action="click->shot_clock#decrease" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▼</button>
+          <button data-action="click->shot-clock#increase" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▲</button>
+          <button data-action="click->shot-clock#decrease" class="text-zinc-700 text-4xl mobile-landscape:text-2xl p-2">▼</button>
         </div>
         <div class="text-red-500 text-[clamp(3rem,10vw,20rem)] cursor-pointer leading-none mt-2"
-            data-shot_clock-target="time2"
-            data-action="click->shot_clock#toggleShotClock">
+            data-shot-clock-target="time2"
+            data-action="click->shot-clock#toggleShotClock">
           24
         </div>
         <div class="flex gap-2 md:gap-4 mt-1">
-          <button data-action="click->shot_clock#setTwentyFour" class="px-3 py-1 lg:px-4 md:py-3 bg-zinc-800 text-white rounded-md text-sm md:text-base">２４</button>
-          <button data-action="click->shot_clock#setFourteen" class="px-3 py-1 lg:px-4 bg-zinc-800 text-white rounded-md text-sm md:text-base">１４</button>
-          <button data-action="click->shot_clock#setTimeout" class="px-3 py-1 lg:px-4 bg-red-800 text-white rounded-md text-sm md:text-base">ＴＯ</button>
+          <button data-action="click->shot-clock#setTwentyFour" class="px-3 py-1 lg:px-4 md:py-3 bg-zinc-800 text-white rounded-md text-sm md:text-base">２４</button>
+          <button data-action="click->shot-clock#setFourteen" class="px-3 py-1 lg:px-4 bg-zinc-800 text-white rounded-md text-sm md:text-base">１４</button>
+          <button data-action="click->shot-clock#setTimeout" class="px-3 py-1 lg:px-4 bg-red-800 text-white rounded-md text-sm md:text-base">ＴＯ</button>
         </div>
       </div>
 
@@ -208,7 +208,7 @@
       <i class="fas fa-bars"></i>
     </button>
     <!-- 全リセット（左サイドバーのリセット） -->
-    <button class="text-white text-xl" data-action="click->game_timer#resetAll">
+    <button class="text-white text-xl" data-action="click->game-timer#resetAll">
       <i class="fas fa-redo"></i>
     </button>
     <!-- ブザー（右サイドバーのブザー） -->

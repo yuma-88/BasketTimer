@@ -42,11 +42,9 @@ export default class extends Controller {
   }
 
   playSwichSound() {
-    const gameTimerController = this.application.controllers.find(
-      controller => controller.identifier === "game_timer"
-    );
-    if (gameTimerController) {
-      gameTimerController.playSwichSound();
+    const audioController = this.application.controllers.find(controller => controller.identifier === 'audio');
+    if (audioController) {
+      audioController.playSwichSound();
     }
   }
 }
