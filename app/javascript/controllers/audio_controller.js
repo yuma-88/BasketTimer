@@ -48,8 +48,11 @@ export default class extends Controller {
       swich: "/sounds/swich.mp3",
     };
 
-    for (let i = 60; i >= 1; i--) {
-      soundFiles[`countdown_${i}`] = `/sounds/countdown_${i}.mp3`;
+    // カウントダウン音声の秒数だけ明示的に指定
+    const countdownSeconds = [60, 30, 15, ...Array.from({ length: 10 }, (_, i) => 10 - i)];
+
+    for (const sec of countdownSeconds) {
+      soundFiles[`countdown_${sec}`] = `/sounds/countdown_${sec}.mp3`;
     }
 
     const promises = Object.entries(soundFiles).map(([key, url]) =>
@@ -170,10 +173,12 @@ export default class extends Controller {
     if (!this.countdownVoice) return;
   
     const soundName = `countdown_${seconds}`;
-    if (this.audioBuffers[soundName]) {
-      this.playSound(soundName);
-    }
-    // 音声が存在しなくても何も表示せずに処理を終了
+  
+    // 同じ秒数を連続で再生しない
+    if (this.lastCountdownPlayed === soundName) return;
+    this.lastCountdownPlayed = soundName;
+  
+    this.playSound(soundName);
   }
 
   // ========= キー操作 ===========
