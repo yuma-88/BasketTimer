@@ -4,29 +4,29 @@
 
 import { application } from "./application"
 
-import GameTimerController from "./game_timer_controller"
-application.register("game_timer", GameTimerController)
-
-import ScoreController from "./score_controller"
-application.register("score", ScoreController)
-
-import ShotClockController from "./shot_clock_controller"
-application.register("shot_clock", ShotClockController)
-
-import SettingsController from "./settings_controller"
-application.register("settings", SettingsController)
-
-import SidemenuController from "./sidemenu_controller";
-application.register("sidemenu", SidemenuController);
-
-import AudioController from "./audio_controller";
-application.register("audio", AudioController);
+import AudioController from "./audio_controller"
+application.register("audio", AudioController)
 
 import ChatsController from "./chats_controller"
 application.register("chats", ChatsController)
 
+import GameTimerController from "./game_timer_controller"
+application.register("game-timer", GameTimerController)
+
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)
+
+import ScoreController from "./score_controller"
+application.register("score", ScoreController)
+
+import SettingsController from "./settings_controller"
+application.register("settings", SettingsController)
+
+import ShotClockController from "./shot_clock_controller"
+application.register("shot-clock", ShotClockController)
+
+import SidemenuController from "./sidemenu_controller"
+application.register("sidemenu", SidemenuController)
 
 import TouchProtectionController from "./touch_protection_controller"
 application.register("touch-protection", TouchProtectionController)

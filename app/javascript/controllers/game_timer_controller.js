@@ -126,7 +126,7 @@ export default class extends Controller {
     if (["インターバル", "ハーフ"].includes(this.currentSelectValue)) return;
 
     if (this.sync24Timer) {
-      const shotClockController = this.application.controllers.find(c => c.identifier === 'shot_clock');
+      const shotClockController = this.application.controllers.find(c => c.identifier === 'shot-clock');
       if (shotClockController) {
         const totalSeconds = this.minutesValue * 60 + this.secondsValue;
         if (totalSeconds > shotClockController.secondsValue) {
@@ -146,7 +146,7 @@ export default class extends Controller {
     if (["インターバル", "ハーフ"].includes(this.currentSelectValue)) return;
 
     if (this.sync24Timer) {
-      const shotClockController = this.application.controllers.find(c => c.identifier === 'shot_clock');
+      const shotClockController = this.application.controllers.find(c => c.identifier === 'shot-clock');
       if (shotClockController) {
         const totalSeconds = this.minutesValue * 60 + this.secondsValue;
         if (totalSeconds > shotClockController.secondsValue) {
@@ -178,7 +178,7 @@ export default class extends Controller {
     this.selectTargets.forEach(select => (select.value = "P1"));
     this.resetTime();
   
-    const shotClockController = this.application.controllers.find(c => c.identifier === 'shot_clock');
+    const shotClockController = this.application.controllers.find(c => c.identifier === 'shot-clock');
     if (shotClockController) shotClockController.reset();
   
     const scoreController = this.application.controllers.find(c => c.identifier === 'score');
@@ -194,7 +194,7 @@ export default class extends Controller {
       this.stop();
       this.playEndSound();
 
-      const shotClockController = this.application.controllers.find(c => c.identifier === 'shot_clock');
+      const shotClockController = this.application.controllers.find(c => c.identifier === 'shot-clock');
       if (shotClockController) shotClockController.reset();
 
       if (this.endless) {
