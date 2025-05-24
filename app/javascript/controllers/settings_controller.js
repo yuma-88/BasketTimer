@@ -9,21 +9,20 @@ export default class extends Controller {
   ];
 
   connect() {
-    this.initializeTimeSelectors(); // 時間の選択肢を作る
-    this.loadSettings(); // 保存された設定を読み込む
-    this.updateAudioSettings(); // 音声のON/OFFの設定を反映する
+    this.initializeTimeSelectors();
+    this.loadSettings();
+    this.updateAudioSettings();
   }
 
   initializeTimeSelectors() {
     const targets = [this.mainTimeTarget, this.breakTimeTarget, this.halfTimeTarget];
 
     targets.forEach(target => {
-      const minutesSelect = target.querySelector(".minutes-select"); // 分を探す
-      const secondsSelect = target.querySelector(".seconds-select"); // 秒を探す
+      const minutesSelect = target.querySelector(".minutes-select");
+      const secondsSelect = target.querySelector(".seconds-select");
 
-      if (!minutesSelect || !secondsSelect) return; // 何もない場合スキップ。エラー回避
+      if (!minutesSelect || !secondsSelect) return;
 
-      // 一旦空にし二重にならないようにリセット
       minutesSelect.innerHTML = "";
       secondsSelect.innerHTML = "";
 
@@ -63,12 +62,28 @@ export default class extends Controller {
     applyTime(this.breakTimeTarget, "breakTime", "1:00");
     applyTime(this.halfTimeTarget, "halfTime", "15:00");
 
+    // enableAudioは保存値 or 初期true
+    const enableAudio = savedSettings.enableAudio ?? true;
+    this.enableAudioTarget.checked = enableAudio;
+
+    // countdownVoiceはenableAudioがONなら保存値 or true、OFFならfalse
+    this.countdownVoiceTarget.checked = enableAudio
+      ? (savedSettings.countdownVoice ?? true)
+      : false;
+
+    // memberChangeVoiceはenableAudioがONなら保存値 or false、OFFならfalse
+    this.memberChangeVoiceTarget.checked = enableAudio
+      ? (savedSettings.memberChangeVoice ?? false)
+      : false;
+
+    // disabled設定もenableAudioに合わせる
+    this.countdownVoiceTarget.disabled = !enableAudio;
+    this.memberChangeVoiceTarget.disabled = !enableAudio;
+
+    // その他の設定
     this.endlessTarget.checked = savedSettings.endless ?? false;
     this.sync24TimerTarget.checked = savedSettings.sync24Timer ?? false;
     this.teamIdenficationTarget.checked = savedSettings.teamIdenfication ?? false;
-    this.enableAudioTarget.checked = savedSettings.enableAudio ?? true;
-    this.countdownVoiceTarget.checked = savedSettings.countdownVoice ?? true;
-    this.memberChangeVoiceTarget.checked = savedSettings.memberChangeVoice ?? false;
   }
 
   saveTime(event) {
@@ -99,34 +114,43 @@ export default class extends Controller {
     window.dispatchEvent(new Event("settings:updated"));
 
     if (settingName === "enableAudio") {
-      this.updateAudioSettings();
+      this.handleEnableAudioChange(settingValue);
     }
   }
 
-  updateAudioSettings() {
-    const enableAudio = this.enableAudioTarget.checked;
-
-    const settings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
-    settings["enableAudio"] = enableAudio;
-    settings["countdownVoice"] = enableAudio ? this.countdownVoiceTarget.checked : false;
-    settings["memberChangeVoice"] = enableAudio ? this.memberChangeVoiceTarget.checked : false;
-    sessionStorage.setItem("gameSettings", JSON.stringify(settings));
-
-    this.countdownVoiceTarget.disabled = !enableAudio;
-    this.memberChangeVoiceTarget.disabled = !enableAudio;
-
+  handleEnableAudioChange(enableAudio) {
+    if (enableAudio && !this.countdownVoiceTarget.checked) {
+      this.countdownVoiceTarget.checked = true; // enableAudioがONならcountdownもONに強制
+    }
     if (!enableAudio) {
       this.countdownVoiceTarget.checked = false;
       this.memberChangeVoiceTarget.checked = false;
     }
 
+    this.countdownVoiceTarget.disabled = !enableAudio;
+    this.memberChangeVoiceTarget.disabled = !enableAudio;
+
+    // 設定を保存
+    const settings = JSON.parse(sessionStorage.getItem("gameSettings")) || {};
+    settings.enableAudio = enableAudio;
+    settings.countdownVoice = this.countdownVoiceTarget.checked;
+    settings.memberChangeVoice = this.memberChangeVoiceTarget.checked;
+    sessionStorage.setItem("gameSettings", JSON.stringify(settings));
+
+    // 設定変更イベントを通知
     window.dispatchEvent(new CustomEvent("audio:setting-changed", {
       detail: {
-        enableAudio: enableAudio,
+        enableAudio,
         countdownVoice: this.countdownVoiceTarget.checked,
-        memberChangeVoice: this.memberChangeVoiceTarget.checked
+        memberChangeVoice: this.memberChangeVoiceTarget.checked,
       }
     }));
+  }
+
+  updateAudioSettings() {
+    const enableAudio = this.enableAudioTarget.checked;
+    this.countdownVoiceTarget.disabled = !enableAudio;
+    this.memberChangeVoiceTarget.disabled = !enableAudio;
   }
 
   playSwichSound() {
