@@ -307,23 +307,13 @@ export default class extends Controller {
   }
 
   increaseSecond() {
-    if (this.secondsValue < 59) {
-      this.secondsValue += 1;
-    } else {
-      this.minutesValue += 1;
-      this.secondsValue = 0;
-    }
+    this.secondsValue = (Math.floor(this.secondsValue) + 1) % 60;
     this.updateDisplay();
     this.playSwichSound();
   }
 
   decreaseSecond() {
-    if (this.secondsValue > 0) {
-      this.secondsValue -= 1;
-    } else if (this.minutesValue > 0) {
-      this.minutesValue -= 1;
-      this.secondsValue = 59;
-    }
+    this.secondsValue = (Math.floor(this.secondsValue) - 1 + 60) % 60;
     this.updateDisplay();
     this.playSwichSound();
   }
