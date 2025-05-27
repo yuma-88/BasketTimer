@@ -25,10 +25,10 @@
       <li class="hidden mobile-landscape:hidden md:flex"><button data-action="click->modal#open">操作ガイド</button></li>
       <li><button data-action="click->game-timer#resetTime">タイマーリセット</button></li>
       <li><button data-action="click->score#resetScores">スコアリセット</button></li>
-      <li><%= link_to settings_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>設定<% end %></li>
-      <li><%= link_to new_user_session_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>試合記録<% end %></li>
-      <li><%= link_to chats_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>コーチAI<% end %></li>
-      <li><%= link_to menus_path, class: "text-white", data: { action: "click->audio#playSwichSound" } do %>メニュー<% end %></li>
+      <li><%= link_to settings_path, class: "text-white", data: { action: "click->audio#navigateWithSound" } do %>設定<% end %></li>
+      <li><%= link_to new_user_session_path, class: "text-white", data: { action: "click->audio#navigateWithSound" } do %>試合記録<% end %></li>
+      <li><%= link_to chats_path, class: "text-white", data: { action: "click->audio#navigateWithSound" } do %>コーチAI<% end %></li>
+      <li><%= link_to menus_path, class: "text-white", data: { action: "click->audio#navigateWithSound" } do %>メニュー<% end %></li>
       <li><button data-action="click->sidemenu#toggle">閉じる</button></li>
     </ul>
   </div>
