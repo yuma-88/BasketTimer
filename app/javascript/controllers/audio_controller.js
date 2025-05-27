@@ -9,13 +9,9 @@ export default class extends Controller {
     this.loopingSources = {};
     this.loadAudioSettings();
 
-    this.boundKeydown = this.handleKeydown.bind(this);
-    this.boundKeyup = this.handleKeyup.bind(this);
     this.boundAudioSettingChanged = this.handleAudioSettingChanged.bind(this);
     this.boundUserInteraction = this.unlockAudioContext.bind(this);
 
-    document.addEventListener("keydown", this.boundKeydown);
-    document.addEventListener("keyup", this.boundKeyup);
     window.addEventListener("audio:setting-changed", this.boundAudioSettingChanged);
     document.addEventListener("touchstart", this.boundUserInteraction);
     document.addEventListener("mousedown", this.boundUserInteraction);
@@ -24,8 +20,6 @@ export default class extends Controller {
   }
 
   disconnect() {
-    document.removeEventListener("keydown", this.boundKeydown);
-    document.removeEventListener("keyup", this.boundKeyup);
     window.removeEventListener("audio:setting-changed", this.boundAudioSettingChanged);
     document.removeEventListener("touchstart", this.boundUserInteraction);
     document.removeEventListener("mousedown", this.boundUserInteraction);
@@ -104,7 +98,14 @@ export default class extends Controller {
     source.buffer = buffer;
 
     const gainNode = this.audioContext.createGain();
-    gainNode.gain.value = options.volume ?? 1.0;
+    if (options.volume !== undefined) {
+      gainNode.gain.value = options.volume;
+    } else if (name === "swich" || name === "toggle") {
+      gainNode.gain.value = 0.5; // 小さめ
+    } else {
+      gainNode.gain.value = 2.0; // 大きめ（デフォルト）
+    }
+  
 
     source.connect(gainNode).connect(this.audioContext.destination);
     source.loop = options.loop ?? false;
@@ -147,12 +148,34 @@ export default class extends Controller {
     }
   }
 
+  navigateWithSound(event) {
+    event.preventDefault();
+  
+    const anchor = event.target.closest('a');
+    if (!anchor) {
+      console.error("リンクタグが見つかりません");
+      return;
+    }
+  
+    const href = anchor.getAttribute("href");
+    if (!href || href === "#") {
+      console.error("無効なリンク先です:", href);
+      return;
+    }
+  
+    this.playSwichSound();
+  
+    setTimeout(() => {
+      window.location.href = href;
+    },80);
+  }
+
   playToggleSound() {
-    this.playSound("toggle", { volume: 0.3 });
+    this.playSound("toggle");
   }
 
   playSwichSound() {
-    this.playSound("swich", { volume: 0.3 });
+    this.playSound("swich");
   }
 
   playEndSound() {
@@ -179,19 +202,5 @@ export default class extends Controller {
     this.lastCountdownPlayed = soundName;
   
     this.playSound(soundName);
-  }
-
-  // ========= キー操作 ===========
-
-  handleKeydown(event) {
-    if (event.key === " ") {
-      this.playBuzzerSound();
-    }
-  }
-
-  handleKeyup(event) {
-    if (event.key === " ") {
-      this.stopBuzzerSound();
-    }
   }
 }
