@@ -13,10 +13,12 @@ export default class extends Controller {
     // イベントリスナー保持（bindして同じ参照に）
     this._handleSettingsUpdated = this.loadSettings.bind(this);
     this._handleKeydown = this.handleKeydown.bind(this);
+    this._handleKeyup = this.handleKeyup.bind(this);
     this._handleSelectChange = event => this.handleSelectChange(event);
   
     window.addEventListener("settings:updated", this._handleSettingsUpdated);
     document.addEventListener("keydown", this._handleKeydown);
+    document.addEventListener("keyup", this._handleKeyup);
     this.selectTargets.forEach(select =>
       select.addEventListener("change", this._handleSelectChange)
     );
@@ -91,6 +93,11 @@ export default class extends Controller {
   }
 
   handleKeydown(event) {
+    if (event.key === " ") {
+      this.playBuzzerSound();
+      return;
+    }
+
     if (this.endless && ['1','2','3','4','5','6','h','H','i','I'].includes(event.key)) {
       event.preventDefault();
       return;
@@ -109,6 +116,12 @@ export default class extends Controller {
     if (keyToValueMap[event.key]) {
       this.selectTargets.forEach(select => select.value = keyToValueMap[event.key]);
       this.resetTime();
+    }
+  }
+
+  handleKeyup(event) {
+    if (event.key === " ") {
+      this.stopBuzzerSound();
     }
   }
 
@@ -338,8 +351,13 @@ export default class extends Controller {
     if (audio) audio.playMemberChangeBuzzerSound();
   }
 
-  playMemberChangeSound() {
+  playBuzzerSound() {
     const audio = this.application.controllers.find(c => c.identifier === 'audio');
-    if (audio) audio.playMemberChangeSound();
+    if (audio) audio.playBuzzerSound();
+  }
+
+  stopBuzzerSound() {
+    const audio = this.application.controllers.find(c => c.identifier === 'audio');
+    if (audio) audio.stopBuzzerSound();
   }
 }
