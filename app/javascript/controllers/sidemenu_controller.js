@@ -4,17 +4,18 @@ export default class extends Controller {
   static targets = ["menu", "overlay"]; // スライド開閉・背景黒
 
   connect() {
+    this.boundHandleKeydown = this.handleKeydown.bind(this);
     // 最初に画面外に追い出し・透明・操作不可
     this.menuTarget.classList.add("-translate-x-full", "opacity-0", "pointer-events-none");
     this.menuTarget.classList.remove("translate-x-0");
     // オーバーレイ非表示
     this.overlayTarget.classList.add("hidden");
     // Mキーで開閉
-    document.addEventListener("keydown", this.handleKeydown.bind(this));
+    document.addEventListener("keydown", this.boundHandleKeydown);
   }
 
   disconnect() {
-    document.removeEventListener("keydown", this.handleKeydown.bind(this));
+    document.removeEventListener("keydown", this.boundHandleKeydown);
   }
 
   handleKeydown(event) {
