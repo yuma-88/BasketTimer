@@ -5,9 +5,9 @@ export default class extends Controller {
 
   connect() {
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    this.audioBuffers = {};
-    this.loopingSources = {};
-    this.loadAudioSettings();
+    this.audioBuffers = {}; // 再生のために一時的にメモリ上に読み込まれた音声データの格納
+    this.loopingSources = {}; // ループ再生中のソースを追跡
+    this.loadAudioSettings(); // 
 
     this.boundAudioSettingChanged = this.handleAudioSettingChanged.bind(this);
     this.boundUserInteraction = this.unlockAudioContext.bind(this);

@@ -346,6 +346,11 @@ export default class extends Controller {
     if (audio) audio.playCountdownSound(seconds);
   }
 
+  playMemberChangeSound() {
+    const audio = this.application.controllers.find(c => c.identifier === 'audio');
+    if (audio) audio.playMemberChangeSound();
+  }
+
   playMemberChangeBuzzerSound() {
     const audio = this.application.controllers.find(c => c.identifier === 'audio');
     if (audio) audio.playMemberChangeBuzzerSound();
