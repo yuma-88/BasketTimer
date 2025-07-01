@@ -7,7 +7,7 @@ export default class extends Controller {
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
     this.audioBuffers = {}; // 再生のために一時的にメモリ上に読み込まれた音声データの格納
     this.loopingSources = {}; // ループ再生中のソースを追跡
-    this.loadAudioSettings(); // 
+    this.loadAudioSettings(); //
 
     this.boundAudioSettingChanged = this.handleAudioSettingChanged.bind(this);
     this.boundUserInteraction = this.unlockAudioContext.bind(this);
@@ -105,7 +105,6 @@ export default class extends Controller {
     } else {
       gainNode.gain.value = 2.0; // 大きめ（デフォルト）
     }
-  
 
     source.connect(gainNode).connect(this.audioContext.destination);
     source.loop = options.loop ?? false;
@@ -150,21 +149,21 @@ export default class extends Controller {
 
   navigateWithSound(event) {
     event.preventDefault();
-  
+
     const anchor = event.target.closest('a');
     if (!anchor) {
       console.error("リンクタグが見つかりません");
       return;
     }
-  
+
     const href = anchor.getAttribute("href");
     if (!href || href === "#") {
       console.error("無効なリンク先です:", href);
       return;
     }
-  
+
     this.playSwichSound();
-  
+
     setTimeout(() => {
       window.location.href = href;
     },80);
@@ -194,13 +193,13 @@ export default class extends Controller {
 
   playCountdownSound(seconds) {
     if (!this.countdownVoice) return;
-  
+
     const soundName = `countdown_${seconds}`;
-  
+
     // 同じ秒数を連続で再生しない
     if (this.lastCountdownPlayed === soundName) return;
     this.lastCountdownPlayed = soundName;
-  
+
     this.playSound(soundName);
   }
 }
