@@ -9,13 +9,13 @@ export default class extends Controller {
     this.loadSettings();
     this.timer = null;
     this.updateDisplay();
-  
+
     // イベントリスナー保持（bindして同じ参照に）
     this._handleSettingsUpdated = this.loadSettings.bind(this);
     this._handleKeydown = this.handleKeydown.bind(this);
     this._handleKeyup = this.handleKeyup.bind(this);
     this._handleSelectChange = event => this.handleSelectChange(event);
-  
+
     window.addEventListener("settings:updated", this._handleSettingsUpdated);
     document.addEventListener("keydown", this._handleKeydown);
     document.addEventListener("keyup", this._handleKeyup);
@@ -23,7 +23,7 @@ export default class extends Controller {
       select.addEventListener("change", this._handleSelectChange)
     );
   }
-  
+
   disconnect() {
     window.removeEventListener("settings:updated", this._handleSettingsUpdated);
     document.removeEventListener("keydown", this._handleKeydown);
@@ -49,19 +49,12 @@ export default class extends Controller {
     this.breakTime = breakTime;
     this.halfTime = halfTime;
     this.endless = savedSettings.endless ?? false;
-    this.toggleSelectAvailability();
 
     this.sync24Timer = savedSettings.sync24Timer ?? false;
     this.teamIdentification = savedSettings.teamIdenfication ?? false;
     this.memberChangeVoice = savedSettings.memberChangeVoice ?? false;
 
     this.updateDisplay();
-  }
-
-  toggleSelectAvailability() {
-    this.selectTargets.forEach(select => {
-      select.disabled = this.endless;
-    });
   }
 
   get currentSelectValue() {
@@ -98,11 +91,6 @@ export default class extends Controller {
       return;
     }
 
-    if (this.endless && ['1','2','3','4','5','6','h','H','i','I'].includes(event.key)) {
-      event.preventDefault();
-      return;
-    }
-
     if (event.key === "Enter") this.toggleTimer();
     if (event.key === "r" || event.key === "R") this.resetAll();
     if (event.key === "t" || event.key === "T") this.resetTime();
@@ -114,7 +102,10 @@ export default class extends Controller {
     };
 
     if (keyToValueMap[event.key]) {
-      this.selectTargets.forEach(select => select.value = keyToValueMap[event.key]);
+      this.selectTargets.forEach(select => {
+        select.value = keyToValueMap[event.key];
+        this.handleSelectChange({ target: select }); // ← これを追加
+      });
       this.resetTime();
     }
   }
@@ -190,13 +181,13 @@ export default class extends Controller {
     this.isResetAll = true;
     this.selectTargets.forEach(select => (select.value = "P1"));
     this.resetTime();
-  
+
     const shotClockController = this.application.controllers.find(c => c.identifier === 'shot-clock');
     if (shotClockController) shotClockController.reset();
-  
+
     const scoreController = this.application.controllers.find(c => c.identifier === 'score');
     if (scoreController) scoreController.resetScores();
-  
+
     this.hasPlayedMemberChange = false;
     this.preventCountdownSound = false;
     this.isResetAll = false;
@@ -344,6 +335,11 @@ export default class extends Controller {
   playCountdownSound(seconds) {
     const audio = this.application.controllers.find(c => c.identifier === 'audio');
     if (audio) audio.playCountdownSound(seconds);
+  }
+
+  playMemberChangeSound() {
+    const audio = this.application.controllers.find(c => c.identifier === 'audio');
+    if (audio) audio.playMemberChangeSound();
   }
 
   playMemberChangeBuzzerSound() {
