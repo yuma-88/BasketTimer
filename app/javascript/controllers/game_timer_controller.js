@@ -10,7 +10,9 @@ export default class extends Controller {
     this.timer = null;
     this.updateDisplay();
 
-    // イベントリスナー保持（bindして同じ参照に）
+    this.endlessSequence = ["P1", "インターバル", "P2", "ハーフ", "P3", "インターバル", "P4", "ハーフ"];
+    this.currentStepIndex = 0;
+
     this._handleSettingsUpdated = this.loadSettings.bind(this);
     this._handleKeydown = this.handleKeydown.bind(this);
     this._handleKeyup = this.handleKeyup.bind(this);
@@ -58,31 +60,41 @@ export default class extends Controller {
   }
 
   get currentSelectValue() {
-    // 複数セレクトの中から最初の有効な値を取得（1つをメインに使う想定）
     return this.selectTargets[0]?.value ?? "P1";
   }
 
   handleSelectChange(event) {
     const selectedOption = event.target.value;
-
     this.preventCountdownSound = (selectedOption === "インターバル" || selectedOption === "ハーフ");
 
     if (selectedOption === "インターバル") {
-      const [breakMinutes, breakSeconds] = this.breakTime.split(":").map(Number);
-      this.minutesValue = breakMinutes;
-      this.secondsValue = breakSeconds;
+      [this.minutesValue, this.secondsValue] = this.breakTime.split(":").map(Number);
     } else if (selectedOption === "ハーフ") {
-      const [halfMinutes, halfSeconds] = this.halfTime.split(":").map(Number);
-      this.minutesValue = halfMinutes;
-      this.secondsValue = halfSeconds;
+      [this.minutesValue, this.secondsValue] = this.halfTime.split(":").map(Number);
     } else if (["P1", "P2", "P3", "P4"].includes(selectedOption)) {
-      const [periodMinutes, periodSeconds] = this.mainTime.split(":").map(Number);
-      this.minutesValue = periodMinutes;
-      this.secondsValue = periodSeconds;
+      [this.minutesValue, this.secondsValue] = this.mainTime.split(":").map(Number);
     }
 
+    this.updateStepIndex(selectedOption);
     this.updateDisplay();
     this.playSwichSound();
+  }
+
+  updateStepIndex(value) {
+    const currentIndex = this.currentStepIndex;
+    const candidates = [];
+
+    this.endlessSequence.forEach((val, i) => {
+      if (val === value) {
+        const diff = (i - currentIndex + this.endlessSequence.length) % this.endlessSequence.length;
+        candidates.push({ index: i, diff });
+      }
+    });
+
+    if (candidates.length > 0) {
+      candidates.sort((a, b) => a.diff - b.diff);
+      this.currentStepIndex = candidates[0].index;
+    }
   }
 
   handleKeydown(event) {
@@ -104,7 +116,7 @@ export default class extends Controller {
     if (keyToValueMap[event.key]) {
       this.selectTargets.forEach(select => {
         select.value = keyToValueMap[event.key];
-        this.handleSelectChange({ target: select }); // ← これを追加
+        this.handleSelectChange({ target: select });
       });
       this.resetTime();
     }
@@ -202,11 +214,17 @@ export default class extends Controller {
       if (shotClockController) shotClockController.reset();
 
       if (this.endless) {
-        if (this.currentSelectValue === "P1") {
-          this.startIntervalTimer();
-        } else if (this.currentSelectValue === "インターバル") {
-          this.resetToGame();
-        }
+        this.currentStepIndex = (this.currentStepIndex + 1) % this.endlessSequence.length;
+        const nextStep = this.endlessSequence[this.currentStepIndex];
+
+        setTimeout(() => {
+          this.selectTargets.forEach(select => (select.value = nextStep));
+          this.handleSelectChange({ target: this.selectTargets[0] });
+
+          if (["インターバル", "ハーフ"].includes(nextStep)) {
+            this.start();
+          }
+        }, 2000); // 5秒後に切り替える
       }
 
       this.hasPlayedMemberChange = false;
@@ -259,23 +277,6 @@ export default class extends Controller {
         setTimeout(() => this.playMemberChangeSound(), 1000);
       }, 1000);
     }
-  }
-
-  startIntervalTimer() {
-    setTimeout(() => {
-      this.selectTargets.forEach(select => (select.value = "インターバル"));
-      this.preventCountdownSound = true;
-      this.resetTime();
-      this.start();
-    }, 2000);
-  }
-
-  resetToGame() {
-    setTimeout(() => {
-      this.preventCountdownSound = false;
-      this.selectTargets.forEach(select => (select.value = "P1"));
-      this.resetTime();
-    }, 2000);
   }
 
   updateDisplay() {
