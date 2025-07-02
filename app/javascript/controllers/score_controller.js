@@ -6,11 +6,11 @@ export default class extends Controller {
 
   connect() {
     this.loadSettings()
+    this.loadScores();
+
     this.updateScoreColors()
-    this.teamAScoreValue = this.parseScore("teamAScore")
-    this.teamBScoreValue = this.parseScore("teamBScore")
     this.selectedTeamValue = "A"
-    
+
     if (window.matchMedia("(min-width: 640px)").matches) {
       this.updateSelection()
     }
@@ -25,6 +25,28 @@ export default class extends Controller {
   loadSettings() {
     const savedSettings = JSON.parse(sessionStorage.getItem("gameSettings")) || {}
     this.teamIdentification = savedSettings.teamIdenfication ?? false
+  }
+
+  loadScores() {
+    const stored = JSON.parse(sessionStorage.getItem("scoreData"));
+    if (stored) {
+      this.teamAScoreValue = stored.teamAScore;
+      this.teamBScoreValue = stored.teamBScore;
+    } else {
+      this.teamAScoreValue = this.parseScore("teamAScore");
+      this.teamBScoreValue = this.parseScore("teamBScore");
+    }
+
+    this.updateScore("teamAScore", this.teamAScoreValue);
+    this.updateScore("teamBScore", this.teamBScoreValue);
+  }
+
+  saveScores() {
+    const data = {
+      teamAScore: this.teamAScoreValue,
+      teamBScore: this.teamBScoreValue
+    };
+    sessionStorage.setItem("scoreData", JSON.stringify(data));
   }
 
   parseScore(targetName) {
@@ -95,6 +117,7 @@ export default class extends Controller {
   increaseTeamAScore() {
     this.teamAScoreValue++
     this.updateScore("teamAScore", this.teamAScoreValue)
+    this.saveScores();
     this.playSwichSound()
   }
 
@@ -102,6 +125,7 @@ export default class extends Controller {
     if (this.teamAScoreValue > 0) {
       this.teamAScoreValue--
       this.updateScore("teamAScore", this.teamAScoreValue)
+      this.saveScores();
       this.playSwichSound()
     }
   }
@@ -109,6 +133,7 @@ export default class extends Controller {
   increaseTeamBScore() {
     this.teamBScoreValue++
     this.updateScore("teamBScore", this.teamBScoreValue)
+    this.saveScores();
     this.playSwichSound()
   }
 
@@ -116,6 +141,7 @@ export default class extends Controller {
     if (this.teamBScoreValue > 0) {
       this.teamBScoreValue--
       this.updateScore("teamBScore", this.teamBScoreValue)
+      this.saveScores();
       this.playSwichSound()
     }
   }
@@ -146,6 +172,7 @@ export default class extends Controller {
       this.swapScoreColors()
     }
 
+    this.saveScores();
     this.playSwichSound()
   }
 
@@ -168,6 +195,7 @@ export default class extends Controller {
     this.teamBScoreValue = 0
     this.updateScore("teamAScore", 0)
     this.updateScore("teamBScore", 0)
+    this.saveScores();
     this.playSwichSound()
   }
 
