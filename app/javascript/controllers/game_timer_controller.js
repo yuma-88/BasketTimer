@@ -224,7 +224,11 @@ export default class extends Controller {
           if (["インターバル", "ハーフ"].includes(nextStep)) {
             this.start();
           }
-        }, 2000); // 5秒後に切り替える
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          this.resetTime();
+        }, 2000);
       }
 
       this.hasPlayedMemberChange = false;
